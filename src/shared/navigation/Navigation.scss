@@ -5,4 +5,17 @@
   padding: 17px 64px 17px 154px;
   justify-content: space-between;
   box-sizing: border-box;
+
+  //&::after {
+  //  content: "New"; // Текст, который будет отображаться
+  //  position: absolute; // Позиционирование относительно родителя
+  //  top: 10px; // Положение сверху
+  //  left: 10px; // Положение слева
+  //  background-color: red; // Цвет фона квадрата
+  //  color: white; // Цвет текста
+  //  padding: 5px; // Отступы текста
+  //  z-index: 10; // Важно, чтобы текст был поверх изображения
+  //  width: 100px;
+  //  height: 100px;
+  //}
 }
