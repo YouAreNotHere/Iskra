@@ -3,37 +3,23 @@ import Rings from "../../assets/RingsOnWhiteHands.jpg";
 import ChainInBlackHand from "../../assets/ChainInBlackHand.jpg";
 import RingsOnBlackHands from "../../assets/RingsOnBlackHands.jpg";
 import ChupaChups from "../../assets/ChupaChups.jpg";
-import {useState} from "react";
 import ShowAdditionalButton from "@shared/buttons/ShowAdditionalButton.tsx";
 import "./productCard.scss"
+import Product from "@shared/ICartProps.ts";
+import {Dispatch, SetStateAction} from "react";
 
-const ProductCard = () => {
-    const [selectedSize, setSelectedSize] = useState(1);
-    const initialProduct = {
-        tags: {
-            item: "колько, коллекция chiaro · scuro",
-            article : "11002",
-        },
-        title: "Вращение судьбы",
-        price: "26 100 ₽",
-        material: "Серебро 925 пробы",
-        stone: "Сибирский нефрит, кубический циркон",
-        possibleSizes: ["16", "16,5", "17", "17,5", "18", "18,5", "19"],
-        textDescription: "Это кольцо-первертыш. Оно подсказывает, как управлять своей энергией.\n" +
-            "Одна часть  — камень, вторая — позолоченное серебро с орнаментом  и цирконом.\n" +
-            "\n" +
-            "\n" +
-            "**Путь CHIARO • SCURO**: Когда камень повернут внутрь, " +
-            "нефрит касается кожи и раскрывает свою энергию —вы, вдыхаете, набираетесь сил. " +
-            "Поворачивая камень к миру, вы выдыхаете, отдаете энергию, достигаете целей и двигаетесь вперед.\n" +
-            "\n" +
-            "\n" +
-            "На обороте есть надпись на латыни «tertium non datur» — «третьего не дано». " +
-            "Есть два варианта: вдох и выдох — третьего не дано.\n" +
-            "\n" +
-            "\n" +
-            "**Артефакт**: Кольца-перевертыши появились в Древнем Египте. " +
-            "Они были популярны среди знати и служили также функциональным предметом — печатью.",
+interface Props{
+    product: Product,
+    selectedSize: string,
+    setSelectedSize: Dispatch<SetStateAction<string>>,
+    setItemsArticlesInCart: Dispatch<SetStateAction<string[]>>,
+    itemsArticlesInCart: string[] | [],
+}
+
+const ProductCard = ({product, selectedSize, setSelectedSize, setItemsArticlesInCart, itemsArticlesInCart}: Props) => {
+
+    const onClickOnAddToCartHandler = () => {
+        setItemsArticlesInCart([...itemsArticlesInCart, product.tags.article])
     }
 
     const formatText = (text: string) => {
@@ -53,8 +39,6 @@ const ProductCard = () => {
         return result.join("");
     };
 
-    const [product] = useState(initialProduct);
-
     return(
         <section className="product-card">
             <div className="product-card__images-wrapper">
@@ -68,7 +52,10 @@ const ProductCard = () => {
             </div>
             <div className="product-card__description">
                 <div className="product-card__tags-wrapper">
-                    <p>{product.tags.item}</p>
+                    <div className="product-card__item-and-collection">
+                        <p>{product.tags.item}</p>
+                        <p>{product.tags.collection}</p>
+                    </div>
                     <p>{product.tags.article}</p>
                 </div>
                 <h1 className="product-card__title">{product.title}</h1>
@@ -85,11 +72,11 @@ const ProductCard = () => {
                 <div className="product-card__possible-sizes">
                     <p>Размер</p>
                     <ul>
-                        {product.possibleSizes.map((size, index) => (
+                        {product.possibleSizes.map((size) => (
                             <li key={size}>
                                 <button
-                                    onClick={() => setSelectedSize(index)}
-                                    className={selectedSize === index ?
+                                    onClick={() => setSelectedSize(size)}
+                                    className={selectedSize === size ?
                                         "product-card__possible-sizes-item product-card__possible-sizes-item--selected"
                                         : "product-card__possible-sizes-item"}
                                 >
@@ -100,7 +87,10 @@ const ProductCard = () => {
                     </ul>
                 </div>
                 <div className="product-card__add-buttons-wrapper">
-                    <button className="product-card__button--add-to-cart">
+                    <button
+                        className="product-card__button--add-to-cart"
+                        onClick={onClickOnAddToCartHandler}
+                    >
                         Добавить в корзину
                     </button>
                     <button className="product-card__button--add-to-favorites">
