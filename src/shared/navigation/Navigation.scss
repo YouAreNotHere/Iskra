@@ -1,21 +1,37 @@
-.navigation{
+@import "@shared/variable/variable";
+
+.navigation {
   width: 100%;
   height: 70px;
   display: flex;
-  padding: 17px 64px 17px 154px;
+  padding: 17px 109px 17px 109px;
   justify-content: space-between;
   box-sizing: border-box;
+}
 
-  //&::after {
-  //  content: "New"; // Текст, который будет отображаться
-  //  position: absolute; // Позиционирование относительно родителя
-  //  top: 10px; // Положение сверху
-  //  left: 10px; // Положение слева
-  //  background-color: red; // Цвет фона квадрата
-  //  color: white; // Цвет текста
-  //  padding: 5px; // Отступы текста
-  //  z-index: 10; // Важно, чтобы текст был поверх изображения
-  //  width: 100px;
-  //  height: 100px;
-  //}
+.navigation__button{
+  font-family: Montserrat;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0;
+  text-align: center;
+  text-transform: uppercase;
+  color: #1E1E1E;
+
+  border: none;
+  background-color: inherit;
+}
+
+.navigation__button-wrapper{
+  display: flex;
+  align-items: center;
+  width: 460px;
+  justify-content: space-between;
+}
+
+.navigation__buttons-wrapper--user{
+  width: 108px;
+  display: flex;
+  justify-content: space-between;
 }

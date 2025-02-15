@@ -1,0 +1,22 @@
+@import "@shared/variable/variable";
+
+.product-card__additional-info{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.product-card__additional-info p{
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: 0;
+  margin: 10px 0 10px 0;
+  color: $black-text;
+}
+
+.product-card__button--show-additional-info{
+  border: 0;
+  background-color: transparent;
+}
