@@ -1,13 +1,17 @@
 import "./CartForm.scss"
-import CartButton from "@assets/CartButton.tsx";
-import Product from "@shared/ICartProps.ts";
+import CartButton from "../../assets/CartButton.tsx";
+import Product from "../../shared/types/IProduct.ts";
+import IItemInCart from "../../shared/types/IItemInCart.ts";
 
 interface CartPageProps {
     product: Product;
     selectedSize: string,
+    itemsInCart?: IItemInCart[] | [],
 }
 
-const CartForm = ({product, selectedSize}: CartPageProps) => {
+const CartForm = ({product, selectedSize,}: CartPageProps) => {
+
+    // const items = itemsInCart.map((item: IItemInCart) => ())
 
     return(
         <section className="cart">

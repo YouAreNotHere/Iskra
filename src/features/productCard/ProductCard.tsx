@@ -3,23 +3,72 @@ import Rings from "../../assets/RingsOnWhiteHands.jpg";
 import ChainInBlackHand from "../../assets/ChainInBlackHand.jpg";
 import RingsOnBlackHands from "../../assets/RingsOnBlackHands.jpg";
 import ChupaChups from "../../assets/ChupaChups.jpg";
-import ShowAdditionalButton from "@shared/buttons/ShowAdditionalButton.tsx";
+import ShowAdditionalButton from "../../shared/buttons/ShowAdditionalButton.tsx";
 import "./productCard.scss"
-import Product from "@shared/ICartProps.ts";
-import {Dispatch, SetStateAction} from "react";
+import Product from "../../shared/types/IProduct.ts";
+import IItemInCart from "../../shared/types/IItemInCart.ts";
+import {Dispatch, SetStateAction, useEffect, useState} from "react";
 
 interface Props{
     product: Product,
     selectedSize: string,
     setSelectedSize: Dispatch<SetStateAction<string>>,
-    setItemsArticlesInCart: Dispatch<SetStateAction<string[]>>,
-    itemsArticlesInCart: string[] | [],
+    setItemsInCart: Dispatch<SetStateAction<IItemInCart[]>>,
+    itemsInCart: IItemInCart[] | [],
 }
 
-const ProductCard = ({product, selectedSize, setSelectedSize, setItemsArticlesInCart, itemsArticlesInCart}: Props) => {
+const ProductCard = ({product, selectedSize, setSelectedSize, setItemsInCart, itemsInCart}: Props) => {
+
+    // const API_URL = 'http://iskra.infinityfreeapp.com/wp-json/wc/v3/products';
+    const CONSUMER_KEY = 'ck_42c279db6dd683fb88c279c79ee900711dd2d692';
+    const CONSUMER_SECRET = 'cs_42c186d89719f38273fb7b14ff6ae3d140787069';
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [__products, setProducts] = useState([]);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [__loading, setLoading] = useState(true);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [_error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            setLoading(true); // Устанавливаем состояние загрузки
+            try {
+                const response = await fetch('/api/wp-json/wc/v3/products', {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Basic ' + btoa(`${CONSUMER_KEY}:${CONSUMER_SECRET}`),
+                    },
+                });
+
+                if (!response.ok) {
+                    console.log("!")
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+
+                const data = await response.json();
+                await console.log(data);
+                setProducts(data);
+            } catch (err: unknown) {
+                console.log("catch")
+                console.log(err)
+                if (err instanceof Error) {
+                    setError(err.message);
+                } else {
+                    setError('An unknown error occurred'); // Обрабатываем случай, если err не является ошибкой
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchProducts();
+    }, []);
 
     const onClickOnAddToCartHandler = () => {
-        setItemsArticlesInCart([...itemsArticlesInCart, product.tags.article])
+        setItemsInCart([...itemsInCart, {article: product.tags.article, size: selectedSize}]);
     }
 
     const formatText = (text: string) => {

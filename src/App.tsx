@@ -1,12 +1,11 @@
 import './App.css'
-import ProductPage from "@/pages/ProductPage.tsx";
-import CartPage from "@/pages/CartPage.tsx";
-import CartForm from "@/features/cart/CartForm.tsx";
-import ProductCard from "@/features/productCard/ProductCard.tsx";
+import CartForm from "./features/cart/CartForm.tsx";
+import ProductCard from "./features/productCard/ProductCard.tsx";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import cartImage from "@assets/Ring.jpg"
+import cartImage from "./assets/Ring.jpg"
 import {useState} from "react";
-import Navigation from "@shared/navigation/Navigation.tsx";
+import Navigation from "./shared/navigation/Navigation.tsx";
+import IItemInCart from "./shared/types/IItemInCart.ts";
 
 function App() {
     const initialProduct = {
@@ -38,7 +37,7 @@ function App() {
         cartImage: cartImage,
     }
     const [product] = useState(initialProduct);
-    const [itemsArticlesInCart, setItemsArticlesInCart] = useState<string[]>([])
+    const [itemsInCart, setItemsInCart] = useState<IItemInCart[]>([])
     const [selectedSize, setSelectedSize] = useState<string>(product.possibleSizes[1]);
 
     return (
@@ -52,8 +51,8 @@ function App() {
                         product={product}
                         selectedSize={selectedSize}
                         setSelectedSize={setSelectedSize}
-                        setItemsArticlesInCart={setItemsArticlesInCart}
-                        itemsArticlesInCart = {itemsArticlesInCart}
+                        setItemsInCart={setItemsInCart}
+                        itemsInCart={itemsInCart}
                     />
             } />
             <Route
@@ -62,6 +61,7 @@ function App() {
                     <CartForm
                         product={product}
                         selectedSize={selectedSize}
+                        itemsInCart={itemsInCart}
                     />
                 }/>
         </Routes>
@@ -69,4 +69,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
