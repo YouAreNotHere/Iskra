@@ -8,6 +8,7 @@ import "./productCard.scss"
 import Product from "../../shared/types/IProduct.ts";
 import IItemInCart from "../../shared/types/IItemInCart.ts";
 import {Dispatch, SetStateAction, useEffect, useState} from "react";
+import ProductsList from "./ProductsList.tsx";
 
 interface Props{
     product: Product,
@@ -163,6 +164,7 @@ const ProductCard = ({product, selectedSize, setSelectedSize, setItemsInCart, it
                 <ShowAdditionalButton value={"гарантия"}/>
                 <ShowAdditionalButton value={"доставка"}/>
             </div>
+            <ProductsList/>
         </section>
 )
 }
