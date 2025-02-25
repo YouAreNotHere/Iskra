@@ -11,7 +11,6 @@ interface CartPageProps {
 
 const CartForm = ({product, selectedSize,}: CartPageProps) => {
 
-    // const items = itemsInCart.map((item: IItemInCart) => ())
 
     return(
         <section className="cart">
@@ -29,11 +28,6 @@ const CartForm = ({product, selectedSize,}: CartPageProps) => {
                     </div>
                     <div className = "cart__current-items">
                         <div className="cart__item-wrapper">
-                            <img
-                                width="117"
-                                height="138"
-                                src={product.cartImage}
-                                alt="Ring"/>
                             <div className="cart__item-info">
                                 <p>{product.tags.item}</p>
                                 <p>{product.title}</p>

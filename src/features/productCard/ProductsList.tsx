@@ -28,12 +28,16 @@ const ProductsList: React.FC = () => {
 
     // Проверяем наличие ajax_object
     const ajaxUrl = window.ajax_object?.ajax_url;
+    console.log(`w ${window.ajax_object}`)
 
     if (!ajaxUrl) {
         throw new Error('AJAX object is not defined or ajax_url is missing');
+    }else{
+        console.log(`ajaxUrl: ${ajaxUrl}`);
     }
 
     useEffect(() => {
+        if (!ajaxUrl) return
         const fetchProducts = async () => {
             try {
                 const response = await fetch(ajaxUrl, {
@@ -50,6 +54,7 @@ const ProductsList: React.FC = () => {
                     throw new Error('Ошибка сервера');
                 }
 
+                console.dir(response)
                 const result: { success: boolean; data: Product[] | ErrorResponse } = await response.json();
 
                 if (result.success) {
@@ -72,12 +77,14 @@ const ProductsList: React.FC = () => {
         return <div>Ошибка: {error}</div>;
     }
 
+    // console.log(products)
+
     return (
         <div className="products-list">
             {products.length > 0 ? (
                 products.map((product) => (
                     <div key={product.id} className="product-card">
-                        <img src={product.cartImage} alt={product.title} />
+                        {/*<img src={product.cartImage} alt={product.title} />*/}
                         <h2>{product.title}</h2>
                         <p>{product.textDescription}</p>
                         <span>{product.price}</span>
