@@ -1,0 +1,20 @@
+.product-item{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  padding: 15px;
+}
+
+.product-item__text{
+  text-align: start;
+  font-weight: 400;
+  font-size: 36px;
+  line-height: 19.2px;
+  letter-spacing: 0;
+  width: 100%;
+  white-space: pre-line;
+  text-align: center;
+}
+

@@ -1,15 +1,15 @@
 import "./CartForm.scss"
 import CartButton from "../../assets/CartButton.tsx";
-import Product from "../../shared/types/IProduct.ts";
-import IItemInCart from "../../shared/types/IItemInCart.ts";
+// import Product from "../../shared/types/IProduct.ts";
+// import IItemInCart from "../../shared/types/IItemInCart.ts";
 
-interface CartPageProps {
-    product: Product;
-    selectedSize: string,
-    itemsInCart?: IItemInCart[] | [],
-}
+// interface CartPageProps {
+//     product: Product;
+//     selectedSize: string,
+//     itemsInCart?: IItemInCart[] | [],
+// }
 
-const CartForm = ({product, selectedSize,}: CartPageProps) => {
+const CartForm = () => {
 
 
     return(
@@ -29,13 +29,13 @@ const CartForm = ({product, selectedSize,}: CartPageProps) => {
                     <div className = "cart__current-items">
                         <div className="cart__item-wrapper">
                             <div className="cart__item-info">
-                                <p>{product.tags.item}</p>
-                                <p>{product.title}</p>
-                                <p>{selectedSize}</p>
+                                {/*<p>{product.tags.item}</p>*/}
+                                {/*<p>{product.title}</p>*/}
+                                {/*<p>{selectedSize}</p>*/}
                             </div>
                         </div>
                         <p className="cart__price">
-                            {product.price}
+                            {/*{product.price}*/}
                         </p>
                         <div className="cart__item-number-wrapper">
                             <button className="cart__button-decrease">

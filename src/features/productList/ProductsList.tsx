@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+// import SelectedProductCard from './SelectedProductCard.tsx';
+import ProductItem from "../productItem/ProductItem.tsx";
+import "./ProductsList.scss"
 
-// Определение типов для товара
 interface Product {
     id: number;
     tags: {
@@ -17,7 +19,6 @@ interface Product {
     cartImage: string;
 }
 
-// Тип для ошибочного ответа
 interface ErrorResponse {
     message: string;
 }
@@ -26,14 +27,10 @@ const ProductsList: React.FC = () => {
     const [products, setProducts] = useState<Product[]>([]);
     const [error, setError] = useState<string | null>(null);
 
-    // Проверяем наличие ajax_object
-    const ajaxUrl = window.ajax_object?.ajax_url;
-    console.log(`w ${window.ajax_object}`)
+    const ajaxUrl = `${import.meta.env.VITE_WORDPRESS_URL}${import.meta.env.VITE_API_ENDPOINT}`;
 
     if (!ajaxUrl) {
         throw new Error('AJAX object is not defined or ajax_url is missing');
-    }else{
-        console.log(`ajaxUrl: ${ajaxUrl}`);
     }
 
     useEffect(() => {
@@ -46,7 +43,7 @@ const ProductsList: React.FC = () => {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
                     body: new URLSearchParams({
-                        action: 'get_all_products', // Действие должно совпадать с PHP-обработчиком
+                        action: 'get_all_products',
                     }),
                 });
 
@@ -54,14 +51,11 @@ const ProductsList: React.FC = () => {
                     throw new Error('Ошибка сервера');
                 }
 
-                console.dir(response)
                 const result: { success: boolean; data: Product[] | ErrorResponse } = await response.json();
 
                 if (result.success) {
-                    // Если запрос успешен, устанавливаем массив товаров
                     setProducts(result.data as Product[]);
                 } else {
-                    // Если запрос не успешен, проверяем наличие свойства message
                     const errorData = result.data as ErrorResponse;
                     setError(errorData.message || 'Неизвестная ошибка');
                 }
@@ -71,29 +65,27 @@ const ProductsList: React.FC = () => {
         };
 
         fetchProducts();
-    }, [ajaxUrl]); // Добавляем зависимость для перезапуска useEffect, если изменится ajaxUrl
+    }, [ajaxUrl]);
 
     if (error) {
         return <div>Ошибка: {error}</div>;
     }
 
-    // console.log(products)
-
+    console.dir(products)
+    
     return (
-        <div className="products-list">
+        <>
             {products.length > 0 ? (
-                products.map((product) => (
-                    <div key={product.id} className="product-card">
-                        {/*<img src={product.cartImage} alt={product.title} />*/}
-                        <h2>{product.title}</h2>
-                        <p>{product.textDescription}</p>
-                        <span>{product.price}</span>
-                    </div>
-                ))
+                <ul className="products-list">
+                    {products.map((product: Product) => (
+                      <li key={product.id}>
+                          <ProductItem product = {product}/>
+                      </li>))}
+                </ul>
             ) : (
                 <div>Загрузка...</div>
             )}
-        </div>
+        </>
     );
 };
 

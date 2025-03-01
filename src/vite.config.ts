@@ -4,6 +4,16 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  server: {
+    proxy: {
+      '/wp-admin': {
+        target: import.meta.env.VITE_WORDPRESS_URL, // Используем переменную окружения
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/wp-admin/, ''),
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

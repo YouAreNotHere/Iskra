@@ -8,10 +8,17 @@ const Navigation = () => {
         navigate('/cart'); // Переход на страницу корзины
     };
 
+    const handleCatalogClick = () => {
+        navigate('/');
+    }
+
     return(
             <nav className="navigation">
                 <div className = "navigation__button-wrapper">
-                    <button className = "navigation__button navigation__button--catalog">
+                    <button
+                        className = "navigation__button navigation__button--catalog"
+                        onClick={handleCatalogClick}
+                    >
                         Каталок
                     </button>
                     <button className = "navigation__button navigation__button--about">
