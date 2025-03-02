@@ -3,6 +3,18 @@ import "./productCard.scss"
 import {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 
+interface Product{
+    description: string;
+    gallery_images: [];
+    id: number;
+    name: string;
+    price: number;
+    categories: [];
+    brand: [];
+    article: string;
+    attributes: [];
+}
+
 
 const SelectedProductCard = () => {
 
@@ -16,11 +28,12 @@ const SelectedProductCard = () => {
 
     const ajaxUrl = `${import.meta.env.VITE_WORDPRESS_URL}${import.meta.env.VITE_API_ENDPOINT}`
 
-    const fetchProductBySlug = async (slug) => {
+    const fetchProductBySlug = async (slug: string) => {
         try {
             const response = await fetch(`${ajaxUrl}?action=get_product_by_slug&slug=${slug}`);
             if (!response.ok) throw new Error('Не удалось загрузить товар');
             const data = await response.json();
+            console.dir(data)
             return data.data;
         } catch (err) {
             console.error(err);
@@ -60,9 +73,16 @@ const SelectedProductCard = () => {
 
         return result.join("");
     };
-    const {description, gallery_images: galleryImages, id, image, name, price, shortDescription, categories, brand, article, attributes} = product;
+    const {description, gallery_images: galleryImages, id, name, price, categories, brand, article, attributes} = product;
+    const {stone, material} = attributes;
+    let sizes: string;
+    if (attributes.pa_size){
+        sizes = attributes.pa_size;
+    }else{
+        sizes = attributes.size
+    }
 
-    if (!selectedSize) setSelectedSize(attributes.size[0]);
+    if (!selectedSize) setSelectedSize(sizes[0]);
     const selectClassName = (size: number | string) => {
         if (selectedSize === "Универсальный") {
             return "product-card__possible-sizes-item product-card__possible-sizes-item--selected product-card__possible-sizes-item--universal";
@@ -80,21 +100,21 @@ const SelectedProductCard = () => {
         try {
             const response = await fetch(ajaxUrl, {
                 method: 'POST',
-                // headers: {
-                //     'Content-Type': 'application/json',
-                // },
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: JSON.stringify({
+                credentials: 'include',
+                body: new URLSearchParams({
                     action: 'add_to_cart',
-                    product_id: product.id,
-                    quantity: 1,
-                    size: size,
-                }),
+                    product_id: id.toString(), // Преобразуем ID в строку
+                    // quantity: quantity.toString(),
+                    quantity: "1",
+                    size: "16",
+                }).toString(),
             });
 
             const data = await response.json();
+
 
             if (data.success) {
                 alert(data.data.message); // Успешное сообщение
@@ -107,6 +127,8 @@ const SelectedProductCard = () => {
             setAddToCartLoading(false);
         }
     };
+
+    console.dir(product)
 
     return(
         <section className="product-card">
@@ -137,7 +159,7 @@ const SelectedProductCard = () => {
                 <div className="product-card__possible-sizes">
                     <p>Размер</p>
                     <ul>
-                        {attributes.size.map((sizeItem: string | number) => (
+                        {sizes.map((sizeItem: string | number) => (
                             <li key={sizeItem}>
                                 <button
                                     onClick={() => setSelectedSize(sizeItem)}
