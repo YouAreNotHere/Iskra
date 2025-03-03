@@ -1,5 +1,5 @@
 import './App.css'
-import CartForm from "./features/cart/cartForm/CartForm.tsx";
+import CartForm from "./features/cart/cartForm/ui/CartForm.tsx";
 import SelectedProductCard from "./features/productCard/SelectedProductCard.tsx";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // import cartImage from "./assets/Ring.jpg"

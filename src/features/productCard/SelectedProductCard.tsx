@@ -109,7 +109,7 @@ const SelectedProductCard = () => {
                     product_id: id.toString(), // Преобразуем ID в строку
                     // quantity: quantity.toString(),
                     quantity: "1",
-                    size: "16",
+                    size: size.toString(),
                 }).toString(),
             });
 

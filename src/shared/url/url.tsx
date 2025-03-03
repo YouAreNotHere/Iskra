@@ -1,0 +1,1 @@
+export const ajaxUrl = `${import.meta.env.VITE_WORDPRESS_URL}${import.meta.env.VITE_API_ENDPOINT}`;

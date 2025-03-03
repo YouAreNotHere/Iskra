@@ -1,15 +1,8 @@
 import "./CartForm.scss"
-import CartButton from "../../../assets/CartButton.tsx";
+import CartButton from "../../../../assets/CartButton.tsx";
 import {useState, useEffect} from "react";
-import CartItem from "../cartItem/CartItem.tsx";
-// import Product from "../../shared/types/IProduct.ts";
-// import IItemInCart from "../../shared/types/IItemInCart.ts";
-
-// interface CartPageProps {
-//     product: Product;
-//     selectedSize: string,
-//     itemsInCart?: IItemInCart[] | [],
-// }
+import CartItem from "../../cartItem/CartItem.tsx";
+import {getCartItems, deleteCartItem} from "../api/cart.request.tsx";
 
 const CartForm = () => {
 
@@ -17,26 +10,13 @@ const CartForm = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const ajaxUrl = `${import.meta.env.VITE_WORDPRESS_URL}${import.meta.env.VITE_API_ENDPOINT}`
-
-    const fetchCartContents = async () => {
+    const getCartContents = async () => {
         setLoading(true);
         setError(null);
 
         try {
-            const response = await fetch(ajaxUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded', // Важно использовать этот формат
-                },
-                credentials: 'include',
-                body: new URLSearchParams({
-                    action: 'get_cart_contents',
-                }).toString(), // Простой POST-запрос без nonce
-            });
-
+            const response = await getCartItems();
             const data = await response.json();
-
             if (data.success) {
                 setCartItems(data.data.cart);
             } else {
@@ -50,7 +30,7 @@ const CartForm = () => {
     };
 
     useEffect(() => {
-        fetchCartContents();
+        getCartContents();
     }, []);
 
     if (loading) return <p>Загрузка корзины...</p>;
