@@ -1,4 +1,5 @@
-import {deleteCartItem} from "../cartForm/api/cart.request.tsx";
+import {deleteCartItem, decreaseCartItem} from "../cartForm/api/cart.request.tsx";
+import CartButton from "../../../assets/CartButton.tsx";
 import "./CartItem.scss"
 
 const CartItem = ({product}) => {
@@ -7,10 +8,10 @@ const CartItem = ({product}) => {
     const newName = name.replace(regExp, '');
     const newSize = size === "" ? "Универсальный" : size;
     const newSubtotal = subtotal
-        .replace(/<[^>]+>/g, '') // Удаляем все HTML-теги
-        .replace(/&#\d+;/g, '') // Удаляем HTML-сущности (например, &#36;)
-        .replace(/,/g, '') // Удаляем запятые
-        .match(/\d+\.\d+|\d+/)[0]; // Извлекаем число (включая десятичную часть)
+        .replace(/<[^>]+>/g, '')
+        .replace(/&#\d+;/g, '')
+        .replace(/,/g, '')
+        .match(/\d+\.\d+|\d+/)[0];
 
     const handleRemoveFromCart = async () => {
         console.log(cartItemKey)
@@ -21,12 +22,26 @@ const CartItem = ({product}) => {
                 throw new Error(`Ошибка HTTP: ${response.status}`);
             }
 
-            const data = await response.json();
-            console.log(data);
+            // const data = await response.json();
         } catch (error) {
             console.error('Произошла ошибка:', error.message);
         }
     };
+
+    const handleDecreaseCartItem = async () => {
+        try{
+            const response = await decreaseCartItem(cartItemKey);
+
+            if (!response.ok) {
+                throw new Error(`Ошибка HTTP: ${response.status}`);
+            }
+
+            // const data = await response.json();
+
+        } catch(error) {
+            console.error('Ошибка запроса:', error.message)
+        }
+    }
 
     return (
         <div className="cart__current-items">
@@ -42,7 +57,7 @@ const CartItem = ({product}) => {
             </p>
             <div className="cart__item-number-wrapper">
                 <button
-                    onClick={handleRemoveFromCart}
+                    onClick={handleDecreaseCartItem}
                     className="cart__button-decrease">
                     -
                 </button>
@@ -56,6 +71,11 @@ const CartItem = ({product}) => {
                 </button>
             </div>
             {newSubtotal}
+            <button
+                onClick={handleRemoveFromCart}
+                className="cart__number-of-pruducts__button--clean-cart">
+                <CartButton/>
+            </button>
         </div>
     )
 }

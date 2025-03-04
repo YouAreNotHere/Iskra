@@ -24,3 +24,16 @@ export const deleteCartItem = async (cartItemKey: string) =>
             cart_item_key: cartItemKey,
         }).toString(),
     });
+
+export const decreaseCartItem = async (cartItemKey: string) =>
+    await fetch(ajaxUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        credentials: 'include', // Передаём cookies
+        body: new URLSearchParams({
+            action: 'decrease_cart_item_quantity',
+            cart_item_key: cartItemKey,
+        }),
+    })
