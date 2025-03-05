@@ -41,19 +41,19 @@
 }
 
 .cart__number-of-pruducts-item{
-  width: 28%;
-  margin-right: 100px;
+  width: 39.5%;
 }
 
 .cart__number-of-pruducts-price{
-  width: 7%;
-  margin-right: 106px;
+  width: 17%;
 }
 
-.cart__number-of-pruducts-number,
+.cart__number-of-pruducts-number {
+  width: 19.5%;
+}
+
 .cart__number-of-pruducts-total{
-  width: 9%;
-  margin-right: 106px;
+  width: 16.8%;
 }
 
 .cart__full-bill{
@@ -71,16 +71,8 @@
 
 .cart__item-wrapper{
   display: flex;
-  width: 28%;
+  width: 35%;
   margin-right: 100px;
-}
-
-.cart__item-info{
-  display: grid;
-  gap: 10px;
-  text-align: start;
-  height: 77px;
-  padding: 30.5px 0 30.5px 30px;
 }
 
 .cart__item-info p{

@@ -1,7 +1,9 @@
-import ShowAdditionalButton from "../../shared/buttons/ShowAdditionalButton.tsx";
-import "./productCard.scss"
+import ShowAdditionalButton from "../../../shared/buttons/ShowAdditionalButton.tsx";
+import "./ProductDetails.scss"
 import {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
+import {ajaxUrl} from "../../../shared/url/url.tsx";
+import {addToCartItem} from "../api/product.request.tsx";
 
 interface Product{
     description: string;
@@ -16,7 +18,7 @@ interface Product{
 }
 
 
-const SelectedProductCard = () => {
+const ProductDetails = () => {
 
     const { slug } = useParams(); // Получаем слаг из URL
     const [product, setProduct] = useState(null);
@@ -25,8 +27,6 @@ const SelectedProductCard = () => {
     const [selectedSize, setSelectedSize] = useState(null);
     const [addToCartLoading, setAddToCartLoading] = useState(false);
     const [addToCartError, setAddToCartError] = useState(null);
-
-    const ajaxUrl = `${import.meta.env.VITE_WORDPRESS_URL}${import.meta.env.VITE_API_ENDPOINT}`
 
     const fetchProductBySlug = async (slug: string) => {
         try {
@@ -93,28 +93,14 @@ const SelectedProductCard = () => {
         if (selectedSize !== size) return "product-card__possible-sizes-item"
     }
 
-    const handleAddToCart = async (size) => {
+    const handleAddToCart = async (size, id) => {
         setAddToCartLoading(true);
         setAddToCartError(null);
 
         try {
-            const response = await fetch(ajaxUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                credentials: 'include',
-                body: new URLSearchParams({
-                    action: 'add_to_cart',
-                    product_id: id.toString(), // Преобразуем ID в строку
-                    // quantity: quantity.toString(),
-                    quantity: "1",
-                    size: size.toString(),
-                }).toString(),
-            });
+            const response = await addToCartItem(size, id)
 
             const data = await response.json();
-
 
             if (data.success) {
                 alert(data.data.message); // Успешное сообщение
@@ -203,4 +189,4 @@ const SelectedProductCard = () => {
 )
 }
 
-export default SelectedProductCard;
+export default ProductDetails;

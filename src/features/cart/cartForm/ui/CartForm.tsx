@@ -2,13 +2,22 @@ import "./CartForm.scss"
 import CartButton from "../../../../assets/CartButton.tsx";
 import {useState, useEffect} from "react";
 import CartItem from "../../cartItem/CartItem.tsx";
-import {getCartItems, deleteCartItem} from "../api/cart.request.tsx";
+import {getCartItems, deleteCartItem} from "../../api/cart.request.tsx";
 
 const CartForm = () => {
 
     const [cartItems, setCartItems] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    const deleteCartItemFromState = (id: string) => {
+        const newCartItems = cartItems.filter(item => item?.id !== id);
+        setCartItems(newCartItems);
+    }
+
+    // const addItemQuantityToState = (id: string) => {
+    //     const newCartItems = cartItems.map(item => (item?.id !== id) ? {...item, quantity: item.quantity - 1 } : item);
+    // }
 
     const getCartContents = async () => {
         setLoading(true);

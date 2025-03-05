@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-// import SelectedProductCard from './SelectedProductCard.tsx';
+// import ProductDetails from './ProductDetails.tsx';
 import ProductItem from "../productItem/ProductItem.tsx";
 import "./ProductsList.scss"
 

@@ -1,4 +1,4 @@
-import {ajaxUrl} from "../../../../shared/url/url.tsx";
+import {ajaxUrl} from "../../../shared/url/url.tsx";
 
 export const getCartItems = async () =>
     await fetch(ajaxUrl, {
@@ -34,6 +34,19 @@ export const decreaseCartItem = async (cartItemKey: string) =>
         credentials: 'include', // Передаём cookies
         body: new URLSearchParams({
             action: 'decrease_cart_item_quantity',
+            cart_item_key: cartItemKey,
+        }),
+    })
+
+export const increaseCartItem = async (cartItemKey: string) =>
+    await fetch(ajaxUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        credentials: 'include', // Передаём cookies
+        body: new URLSearchParams({
+            action: 'increase_cart_item_quantity',
             cart_item_key: cartItemKey,
         }),
     })

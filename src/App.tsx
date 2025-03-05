@@ -1,6 +1,6 @@
 import './App.css'
 import CartForm from "./features/cart/cartForm/ui/CartForm.tsx";
-import SelectedProductCard from "./features/productCard/SelectedProductCard.tsx";
+import ProductDetails from "./features/productDetails/ui/ProductDetails.tsx";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // import cartImage from "./assets/Ring.jpg"
 // import {useState} from "react";
@@ -17,7 +17,7 @@ function App() {
             <Route
                 path="/product/:slug"
                 element={
-                    <SelectedProductCard/>
+                    <ProductDetails/>
             }/>
             <Route
                 path="/"
