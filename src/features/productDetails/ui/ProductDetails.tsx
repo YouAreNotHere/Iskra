@@ -160,7 +160,7 @@ const ProductDetails = () => {
                 <div className="product-card__add-buttons-wrapper">
                     <button
                         className="product-card__button--add-to-cart"
-                        onClick={() => handleAddToCart(selectedSize)}
+                        onClick={() => handleAddToCart(selectedSize, id)}
                     >
                         Добавить в корзину
                     </button>

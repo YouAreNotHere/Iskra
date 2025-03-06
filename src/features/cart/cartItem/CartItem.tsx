@@ -1,29 +1,29 @@
 import {deleteCartItem, decreaseCartItem, increaseCartItem} from "../../../features/cart/api/cart.request.tsx";
 import CartButton from "../../../assets/CartButton.tsx";
 import "./CartItem.scss"
-import {addToCartItem} from "../../../features/productDetails/api/product.request.tsx";
 import {useState} from "react";
+import fixTotalPrice from "../../../shared/functions/FixTotalPrice.tsx"
 
-const CartItem = ({product}) => {
-    const {categories, name, size, price, cart_item_key: cartItemKey, quantity,subtotal, image} = product;
+const CartItem = ({product, handleDeleteItem}) => {
+    const [productState, setProductState] = useState(product);
+    const {categories, name, size, price, cart_item_key: cartItemKey, quantity,subtotal, image, id} = productState;
+
     const regExp = /\s*-\s*\d+(\.\d+)?$/;
+    const newPrice = price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");
     const newName = name.replace(regExp, '');
     const newSize = size === "" ? "Универсальный" : size.replace(/-/g, ',');
-    const newSubtotal = subtotal
-        .replace(/<[^>]+>/g, '')
-        .replace(/&#\d+;/g, '')
-        .replace(/,/g, '')
-        .match(/\d+\.\d+|\d+/)[0];
+    const newSubtotal = fixTotalPrice(subtotal);
 
     const handleRemoveFromCart = async () => {
         try {
+            handleDeleteItem(id)
+
             const response = await deleteCartItem(cartItemKey)
 
             if (!response.ok) {
                 throw new Error(`Ошибка HTTP: ${response.status}`);
             }
 
-            // const data = await response.json();
         } catch (error) {
             console.error('Произошла ошибка:', error.message);
         }
@@ -31,6 +31,17 @@ const CartItem = ({product}) => {
 
     const handleDecreaseCartItem = async () => {
         try{
+
+            if (productState.quantity < 2) {
+                handleDeleteItem(id)
+                console.log("Delete")
+            }
+            if (productState.quantity > 1) {
+                const newProduct = {...productState, quantity: productState.quantity - 1};
+                setProductState(newProduct);
+            }
+
+
             const response = await decreaseCartItem(cartItemKey);
 
             if (!response.ok) {
@@ -46,6 +57,10 @@ const CartItem = ({product}) => {
 
     const handleIncreaseCartItem = async () => {
         try{
+
+            const newProduct = {...productState, quantity: productState.quantity + 1};
+            setProductState(newProduct);
+
             const response = await increaseCartItem(cartItemKey);
 
             if (!response.ok) {
@@ -62,15 +77,13 @@ const CartItem = ({product}) => {
         <div className="cart-item">
             <img className="cart-item__img" src={image}/>
             <div className="cart__info-without-img">
-                {/*<div className="cart__item-wrapper">*/}
                     <div className="cart-item__info">
                         <p>{categories}</p>
                         <p>{newName}</p>
                         <p>Размер: {newSize}</p>
                     </div>
-                {/*</div>*/}
                 <p className="cart__price">
-                    {price}
+                    {newPrice} ₽
                 </p>
                 <div className="cart__quantity-control">
                     <div className="cart__quantity-control-wrapper">
@@ -89,10 +102,10 @@ const CartItem = ({product}) => {
                         </button>
                     </div>
                 </div>
-                <p className="cart__total">{newSubtotal}</p>
+                <p className="cart__total">{newSubtotal} ₽</p>
                 <button
                     onClick={handleRemoveFromCart}
-                    className="cart__number-of-pruducts__button--clean-cart">
+                    className="cart__button--delete">
                     <CartButton/>
                 </button>
             </div>
