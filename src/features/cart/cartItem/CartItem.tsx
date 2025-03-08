@@ -7,12 +7,14 @@ import fixTotalPrice from "../../../shared/functions/FixTotalPrice.tsx"
 const CartItem = ({product, handleDeleteItem}) => {
     const [productState, setProductState] = useState(product);
     const {categories, name, size, price, cart_item_key: cartItemKey, quantity,subtotal, image, id} = productState;
-
+    const {regular: regularPrice, current: currentPrice} = price;
+    const {regular: regularSubtotal, current: currentSubtotal} = subtotal;
     const regExp = /\s*-\s*\d+(\.\d+)?$/;
-    const newPrice = price.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");
+    const newPrice = currentPrice.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");
     const newName = name.replace(regExp, '');
     const newSize = size === "" ? "Универсальный" : size.replace(/-/g, ',');
-    const newSubtotal = fixTotalPrice(subtotal);
+    let newSubtotal: number|string = fixTotalPrice(currentSubtotal);
+    newSubtotal = newSubtotal.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
 
     const handleRemoveFromCart = async () => {
         try {

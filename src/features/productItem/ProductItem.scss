@@ -1,14 +1,20 @@
-.product-item{
+.product-item {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: white;
   padding: 15px;
+  border: 1px solid #ccc;
+  transition: box-shadow 0.3s ease;
+  margin-bottom: 20px;
+
+  &:hover {
+    box-shadow: 0 0 10px rgba(1, 1, 1, 0.5);
+  }
 }
 
-.product-item__text{
-  text-align: start;
+.product-item__text {
   font-weight: 400;
   font-size: 36px;
   line-height: 19.2px;
@@ -18,3 +24,16 @@
   text-align: center;
 }
 
+.product-item__regular-price {
+  text-decoration: line-through;
+  opacity: 0.5;
+}
+
+.product-item__sale-price{
+  color: red;
+}
+
+.product-card__price--old{
+  text-decoration: line-through;
+  opacity: 0.5;
+}

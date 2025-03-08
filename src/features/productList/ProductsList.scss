@@ -19,17 +19,3 @@
   //  grid-template-columns: 1fr 1fr 1fr 1fr;
   //}
 }
-
-.products-list li{
-  overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s;
-  position: relative;
-  z-index: 1;
-
-  :hover{
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-
-  margin-bottom: 20px;
-}

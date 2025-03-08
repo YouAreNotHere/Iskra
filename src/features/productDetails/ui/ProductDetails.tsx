@@ -73,7 +73,7 @@ const ProductDetails = () => {
 
         return result.join("");
     };
-    const {description, gallery_images: galleryImages, id, name, price, categories, brand, article, attributes} = product;
+    const {description, gallery_images: galleryImages, id, name, price, categories, brand, article, attributes, regular_price: regularPrice} = product;
     const {stone, material} = attributes;
     let sizes: string;
     if (attributes.pa_size){
@@ -132,7 +132,15 @@ const ProductDetails = () => {
                     <p>{article}</p>
                 </div>
                 <h1 className="product-card__title">{name}</h1>
-                <p className="product-card__price">{price}</p>
+                <p
+                    className={regularPrice === price
+                        ? "product-card__price"
+                        : "product-card__price product-card__price--sale"}>
+                    {price}
+                </p>
+                {regularPrice === price
+                    ? null
+                    : <p className="product-card__price product-card__price--old">{regularPrice}</p>}
                 <div className="product-card__material">
                     <p>Материал</p>
                     <p>{attributes.material}</p>

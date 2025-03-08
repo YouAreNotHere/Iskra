@@ -1,0 +1,28 @@
+.order-product{
+  display: flex;
+  gap: 10px;
+  width: 443px;
+  justify-content: space-between;
+  padding: 15px;
+
+  border-bottom: 1px solid #D9D9D9;
+  background-color: #ECECEC;
+}
+
+.order-product__text{
+  text-align: start;
+  margin: 0;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 120%;
+}
+
+.order-product__info-wrapper{
+  display: grid;
+  gap: 10px;
+}
+
+.order-product__price{
+  display: flex;
+  align-items: center;
+}

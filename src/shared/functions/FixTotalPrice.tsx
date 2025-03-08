@@ -1,12 +1,13 @@
 const fixTotalPrice = (total: number) =>{
-    return total
+    const newTotal = total
         .toString()
         .replace(/<[^>]+>/g, '')
         .replace(/&#\d+;/g, '')
         .replace(/,/g, '')
         .replace(/\.\d+$/, '')
-        .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ')
         .trim();
+
+    return Number(newTotal);
 }
 
 export default fixTotalPrice;
