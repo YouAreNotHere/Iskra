@@ -1,23 +1,24 @@
 import './OrderForm.scss';
-// import {getCartItems} from "../../cart/api/cart.request.tsx";
 import {getOrderProducts, postOrder} from "../api/order.request.tsx";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import OrderProduct from "../../orderProduct/OrderProduct.tsx";
 import formatTotal from "../../../../shared/functions/FormatTotal.tsx";
+import FormatNumber from "../../../../shared/functions/FormatNumber.tsx";
+import formatNumber from "../../../../shared/functions/FormatNumber.tsx";
 
 const  OrderForm = () => {
     const [orderProducts, setOrderProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [deliveryMethod, setDeliveryMethod] = useState("Самовывоз");
-    const [paymentMethod, setPaymentMethod] = useState("Наличные");
-    const [name, setName] = useState("Антон");
-    const [surname, setSurname] = useState("Малков");
-    const [phone, setPhone] = useState("89220274819");
-    const [email, setEmail] = useState("mallkovi4@mail.ru");
-    const [address, setAddress] = useState("");
-    const [comment, setComment] = useState("Антон!");
+    const [deliveryMethod, setDeliveryMethod] = useState();
+    const [paymentMethod, setPaymentMethod] = useState();
+    const [name, setName] = useState();
+    const [surname, setSurname] = useState();
+    const [phone, setPhone] = useState();
+    const [email, setEmail] = useState();
+    const [address, setAddress] = useState();
+    const [comment, setComment] = useState();
     const navigate = useNavigate();
     const isButtonDisabled = deliveryMethod === "local_pickup"
         ? !name || !surname || !phone || !email
@@ -49,6 +50,9 @@ const  OrderForm = () => {
 
     const regularTotal = formatTotal(orderProducts, "regular");
     const currentTotal = formatTotal(orderProducts, "current");
+    let finishTotal = deliveryMethod === "flat_rate"
+        ? Number(currentTotal.replace(/ /g, "")) + 1000 : currentTotal;
+    finishTotal = formatNumber(finishTotal);
     console.dir(orderProducts);
 
     const onClickHandler = async  () => {
@@ -194,11 +198,19 @@ const  OrderForm = () => {
                     </ul>
                     <div className="order-info__total-wrapper">
                         <p className="order-info__total-title">Цена</p>
-                        <p className="order-info__total">{regularTotal}</p>
+                        <p className="order-info__total">{regularTotal} ₽</p>
                     </div>
                     <div className="order-info__total-with-sale-wrapper">
                         <p className="order-info__total-title-with-sale">Цена со скидкой</p>
-                        <p className="order-info__total-with-sale">{currentTotal}</p>
+                        <p className="order-info__total-with-sale">{currentTotal} ₽</p>
+                    </div>
+                    <div className={deliveryMethod === "flat_rate" ? "order-info__delivery-price-wrapper" : "order-info__wrapper--hidden"}>
+                        <p className="order-info__delivery-price-title">Стоимость доставки</p>
+                        <p className="order-info__delivery-price-text">1 000 ₽</p>
+                    </div>
+                    <div className={deliveryMethod === "flat_rate" ? "order-info__finish-total-wrapper" : "order-info__wrapper--hidden"}>
+                        <p className="order-info__finish-total-title">Итоговая стоимость</p>
+                        <p className="order-info__finish-total-text">{finishTotal} ₽</p>
                     </div>
                     <form method={"post"} className="delivery-method">
                         <h2 className="delivery-method__title">Способ доставки</h2>
@@ -209,7 +221,7 @@ const  OrderForm = () => {
                                 id="deliveryMethodRadio"
                                 name="deliveryMethod"
                                 value={deliveryMethod}
-                                onChange={()=> setDeliveryMethod("local_pickup")}
+                                onChange={() => setDeliveryMethod("local_pickup")}
                             />
                             <p className="payment-method__text">Самовывоз</p>
                         </div>
@@ -220,7 +232,7 @@ const  OrderForm = () => {
                                 id="deliveryMethodRadio"
                                 name="deliveryMethod"
                                 value={deliveryMethod}
-                                onChange={()=> setDeliveryMethod("flat_rate")}
+                                onChange={() => setDeliveryMethod("flat_rate")}
                             />
                             <p className="delivery-method__text">Курьером</p>
                         </div>
@@ -234,7 +246,7 @@ const  OrderForm = () => {
                                 id="paymentMethodRadio"
                                 name="paymentMethod"
                                 value="online-cart"
-                                onChange={()=>setPaymentMethod("bacs")}
+                                onChange={() => setPaymentMethod("bacs")}
                             />
                             <p className="payment-method__text">Картой онлайн</p>
                         </div>
@@ -247,7 +259,7 @@ const  OrderForm = () => {
                                 id="paymentMethodRadio"
                                 name="paymentMethod"
                                 value="offline-cart"
-                                onChange={()=>setPaymentMethod("cod")}
+                                onChange={() => setPaymentMethod("cod")}
                             />
                             <p className="payment-method__text">Картой при получении</p>
                         </div>
@@ -260,7 +272,7 @@ const  OrderForm = () => {
                                 id="paymentMethodRadio"
                                 name="paymentMethod"
                                 value="offline-cash"
-                                onChange={()=>setPaymentMethod("cod")}
+                                onChange={() => setPaymentMethod("cod")}
                             />
                             <p className="payment-method__text">Наличными</p>
                         </div>
@@ -268,7 +280,7 @@ const  OrderForm = () => {
                     <button
                         className="order-info__button"
                         disabled={isButtonDisabled}
-                        onClick={()=>onClickHandler()}
+                        onClick={() => onClickHandler()}
                     >
                         Оформить заказ
                     </button>

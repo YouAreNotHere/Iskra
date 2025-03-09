@@ -35,6 +35,10 @@
   box-sizing: border-box;
 }
 
+.cart__products-info--hidden{
+  display: none;
+}
+
 .cart__titles-row{
   display: flex;
   width: 100%;

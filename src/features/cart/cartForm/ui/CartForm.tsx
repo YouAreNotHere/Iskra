@@ -5,6 +5,7 @@ import {useState, useEffect} from "react";
 import CartItem from "../../cartItem/CartItem.tsx";
 import {getCartItems} from "../../api/cart.request.tsx";
 import FormatTotal from "../../../../shared/functions/FormatTotal.tsx";
+import FormatNumber from "../../../../shared/functions/FormatNumber.tsx";
 
 const CartForm = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -44,9 +45,9 @@ const CartForm = () => {
     if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
     const regularTotal = FormatTotal(cartItems, "regular");
-    const currentTotal = FormatTotal(cartItems, "current");
-    let sale: number | string = regularTotal.replace(/ /g, '') - currentTotal.replace(/ /g, '');
-    sale = sale.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
+    const currentTotal =  FormatTotal(cartItems, "current");
+    const sale: number | string = FormatNumber(regularTotal.replace(/ /g, '') - currentTotal.replace(/ /g, ''));
+
 
     console.dir(cartItems)
 
@@ -64,12 +65,15 @@ const CartForm = () => {
                         <p className="cart__number-of-pruducts-total">Сумма</p>
                         <CartButton/>
                     </div>
-                    <div className="cart__products-info">
+                    <div className={cartItems[0] ? "cart__products-info" : "cart__products-info--hidden"}>
                         {cartItems.map((item) => (
                             <CartItem
                                 key={item.id}
                                 product={item}
-                                handleDeleteItem={deleteCartItemFromState}/>
+                                cartItems={cartItems}
+                                setCartItems={setCartItems}
+                                handleDeleteItem={deleteCartItemFromState}
+                            />
                         ))}
                     </div>
                     <div className="promocode">

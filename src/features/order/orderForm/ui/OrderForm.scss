@@ -135,7 +135,10 @@
 }
 
 .order-info__total-wrapper,
-.order-info__total-with-sale-wrapper{
+.order-info__total-with-sale-wrapper,
+.order-info__finish-total-wrapper,
+.order-info__delivery-price-wrapper,
+.order-info__delivery-sale-wrapper{
   display: flex;
   padding: 15px;
   justify-content: space-between;
@@ -147,21 +150,30 @@
   }
 }
 
+.order-info__wrapper--hidden{
+  display: none;
+}
+
 .order-info__total-title-with-sale,
-.order-info__total-title{
+.order-info__total-title,
+.order-info__delivery-price-title,
+.order-info__finish-total-title{
   font-weight: 500;
   font-size: 16px;
   line-height: 120%;
 }
 
 .order-info__total,
-.order-info__total-with-sale{
+.order-info__total-with-sale,
+.order-info__delivery-price-text,
+.order-info__finish-total-text{
   font-weight: 400;
   font-size: 16px;
   line-height: 120%;
 }
 
-.order-info__total-with-sale{
+.order-info__total-with-sale,
+.order-info__finish-total-text{
   font-weight: 500;
 }
 

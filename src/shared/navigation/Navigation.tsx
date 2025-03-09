@@ -19,7 +19,7 @@ const Navigation = () => {
                         className = "navigation__button navigation__button--catalog"
                         onClick={handleCatalogClick}
                     >
-                        Каталок
+                        Каталог
                     </button>
                     <button className = "navigation__button navigation__button--about">
                         О нас

@@ -4,7 +4,7 @@ import "./CartItem.scss"
 import {useState} from "react";
 import fixTotalPrice from "../../../shared/functions/FixTotalPrice.tsx"
 
-const CartItem = ({product, handleDeleteItem}) => {
+const CartItem = ({product, handleDeleteItem, cartItems, setCartItems}) => {
     const [productState, setProductState] = useState(product);
     const {categories, name, size, price, cart_item_key: cartItemKey, quantity,subtotal, image, id} = productState;
     const {regular: regularPrice, current: currentPrice} = price;
@@ -39,8 +39,19 @@ const CartItem = ({product, handleDeleteItem}) => {
                 console.log("Delete")
             }
             if (productState.quantity > 1) {
-                const newProduct = {...productState, quantity: productState.quantity - 1};
-                setProductState(newProduct);
+                const newCartItems = cartItems.map((item) => {
+                    if (item.cart_item_key === cartItemKey) {
+                        return {
+                            ...item, quantity: item.quantity - 1,
+                            subtotal: {regular: Number(item.subtotal.regular) - Number(item.price.regular),
+                                current: Number(item.subtotal.current) - Number(item.price.current)}
+                        }
+                    }else{
+                        return item
+                    }
+                })
+                setCartItems(newCartItems);
+                setProductState({...product, quantity: product.quantity + 1})
             }
 
 
@@ -50,8 +61,6 @@ const CartItem = ({product, handleDeleteItem}) => {
                 throw new Error(`Ошибка HTTP: ${response.status}`);
             }
 
-            // const data = await response.json();
-
         } catch(error) {
             console.error('Ошибка запроса:', error.message)
         }
@@ -59,9 +68,19 @@ const CartItem = ({product, handleDeleteItem}) => {
 
     const handleIncreaseCartItem = async () => {
         try{
-
-            const newProduct = {...productState, quantity: productState.quantity + 1};
-            setProductState(newProduct);
+            const newCartItems = cartItems.map((item) => {
+                if (item.cart_item_key === cartItemKey) {
+                    return {
+                        ...item, quantity: item.quantity + 1,
+                        subtotal: {regular: Number(item.subtotal.regular) + Number(item.price.regular),
+                            current: Number(item.subtotal.current) + Number(item.price.current)}
+                    }
+                }else{
+                    return item
+                }
+            })
+            setCartItems(newCartItems);
+            setProductState({...product, quantity: product.quantity + 1})
 
             const response = await increaseCartItem(cartItemKey);
 
