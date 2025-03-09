@@ -69,6 +69,10 @@
   height: 49px;
 }
 
+.contact-info__input-wrapper--hidden{
+  display: none;
+}
+
 .contact-info__name{
   margin-right: 4px;
 }
@@ -78,20 +82,24 @@
 }
 
 .contact-info__address{
-  margin: 20px 0 20px 0;
+  margin: 20px 0 0 0;
 }
 
 .contact-info__comments{
   height: 83px;
+  margin-top: 20px;
 }
 
 .contact-info__label{
   top: 50%;
 }
 
-.contact-info__label--comments,
 .contact-info__label--surname{
   top: 25px;
+}
+
+.contact-info__label--comments{
+  top: 45px
 }
 
 .contact-info__label--comments :nth-child(2){
@@ -106,6 +114,10 @@
 
 .order-info{
   margin-left: 30px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
 }
 
 .order-info__title{
@@ -113,8 +125,87 @@
   font-size: 24px;
   line-height: 34px;
   margin: 0 0 20px 0;
+  text-align: start;
 }
 
 .order-info__products{
   list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.order-info__total-wrapper,
+.order-info__total-with-sale-wrapper{
+  display: flex;
+  padding: 15px;
+  justify-content: space-between;
+  background-color: #ECECEC;
+  border-bottom: 1px solid #D9D9D9;
+
+  p {
+    margin: 0;
+  }
+}
+
+.order-info__total-title-with-sale,
+.order-info__total-title{
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 120%;
+}
+
+.order-info__total,
+.order-info__total-with-sale{
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 120%;
+}
+
+.order-info__total-with-sale{
+  font-weight: 500;
+}
+
+.payment-method__title,
+.delivery-method__title{
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 34px;
+  margin: 30px 0 10px 0;
+  text-align: start;
+}
+
+.payment-method__text-and-input,
+.delivery-method__text-and-input{
+  display: flex;
+  justify-content: start;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 120%;
+  margin-top: 10px;
+}
+
+.payment-method__radio,
+.delivery-method__radio{
+  margin: 0 10px 0 0;
+}
+
+.payment-method__text,
+.delivery-method__text{
+  margin: 0;
+}
+
+.order-info__button{
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 120%;
+  color: #D9D9D9;
+  background-color: #7E5A4D;
+  width: 285px;
+  height: 52px;
+  border: 0;
+  margin-top: 30px;
+}
+
+.payment-method__text-and-input--hidden{
+  display: none;
 }

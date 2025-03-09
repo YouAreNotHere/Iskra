@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom";
 import {useState, useEffect} from "react";
 import CartItem from "../../cartItem/CartItem.tsx";
 import {getCartItems} from "../../api/cart.request.tsx";
-import fixTotalPrice from "../../../../shared/functions/FixTotalPrice.tsx";
+import FormatTotal from "../../../../shared/functions/FormatTotal.tsx";
 
 const CartForm = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -43,19 +43,12 @@ const CartForm = () => {
     if (loading) return <p>Загрузка корзины...</p>;
     if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
-    const formatTotal = (total) => {
-        return cartItems
-            .reduce((acc, item) => {
-                return acc + fixTotalPrice(item.subtotal[total])
-            }, 0)
-            .toString()
-            .replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
-    }
-
-    const regularTotal = formatTotal("regular");
-    const currentTotal = formatTotal("current");
-    let sale = regularTotal.replace(/ /g, '') - currentTotal.replace(/ /g, '');
+    const regularTotal = FormatTotal(cartItems, "regular");
+    const currentTotal = FormatTotal(cartItems, "current");
+    let sale: number | string = regularTotal.replace(/ /g, '') - currentTotal.replace(/ /g, '');
     sale = sale.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
+
+    console.dir(cartItems)
 
     return(
         <section className="cart">
