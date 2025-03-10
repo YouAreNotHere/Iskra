@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from "./shared/navigation/Navigation.tsx";
 import ProductsList from "./features/productList/ProductsList.tsx";
 import OrderForm from "./features/order/orderForm/ui/OrderForm.tsx";
+import About from "./features/about/About.tsx";
 
 function App() {
 
@@ -31,6 +32,11 @@ function App() {
                 path="/order"
                 element={
                     <OrderForm/>
+                }/>
+            <Route
+                path="/о-нас"
+                element={
+                    <About/>
                 }/>
         </Routes>
     </Router>

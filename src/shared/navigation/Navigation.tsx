@@ -12,6 +12,10 @@ const Navigation = () => {
         navigate('/');
     }
 
+    const handleAboutClick = () => {
+        navigate('/о-нас');
+    }
+
     return(
             <nav className="navigation">
                 <div className = "navigation__button-wrapper">
@@ -21,7 +25,10 @@ const Navigation = () => {
                     >
                         Каталог
                     </button>
-                    <button className = "navigation__button navigation__button--about">
+                    <button
+                        className = "navigation__button navigation__button--about"
+                        onClick={handleAboutClick}
+                    >
                         О нас
                     </button>
                     <button className = "navigation__button navigation__button--news">

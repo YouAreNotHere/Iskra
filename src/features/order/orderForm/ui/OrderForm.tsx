@@ -1,16 +1,12 @@
 import './OrderForm.scss';
-import {getOrderProducts, postOrder} from "../api/order.request.tsx";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import OrderProduct from "../../orderProduct/OrderProduct.tsx";
 import formatTotal from "../../../../shared/functions/FormatTotal.tsx";
-import FormatNumber from "../../../../shared/functions/FormatNumber.tsx";
 import formatNumber from "../../../../shared/functions/FormatNumber.tsx";
+import {useRequest} from "../../../../shared/hooks/useRequest.ts";
 
 const  OrderForm = () => {
-    const [orderProducts, setOrderProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
     const [deliveryMethod, setDeliveryMethod] = useState();
     const [paymentMethod, setPaymentMethod] = useState();
     const [name, setName] = useState();
@@ -23,59 +19,28 @@ const  OrderForm = () => {
     const isButtonDisabled = deliveryMethod === "local_pickup"
         ? !name || !surname || !phone || !email
         : !name || !surname || !phone || !email || !address;
+    const body = {action: 'post_order', first_name: name, last_name: surname,
+        phone, email, address, comments: comment, payment_method: paymentMethod, shipping_method: deliveryMethod};
+    const {makeRequest: postOrder} = useRequest({method: "POST", body});
+    const {data, makeRequest: getOrderProducts} = useRequest({method: "POST", body : {action: 'get_order_products'}});
 
-    const getProducts = async () => {
-        setLoading(true);
-        setError(null);
-
-        try {
-            const response = await getOrderProducts();
-            const data = await response.json();
-            if (data.success) {
-                setOrderProducts(data.data.cart);
-            } else {
-                setError(data.data.message);
-            }
-        } catch (err) {
-            setError('Произошла ошибка при загрузке корзины');
-        } finally {
-            setLoading(false);
-        }
-    };
 
     useEffect(() => {
-        getProducts()
+        getOrderProducts()
     }, []);
 
+    if (!data) return <p> Загрузка...</p>
 
+    const orderProducts = data.data.cart;
     const regularTotal = formatTotal(orderProducts, "regular");
     const currentTotal = formatTotal(orderProducts, "current");
+    let deliveryCost = (data.data.totals.shipping_cost
+        .replace(/(\d[\d\s]*)\.\d+/, '$1')
+        .replace(/\s+/g, ''))
     let finishTotal = deliveryMethod === "flat_rate"
-        ? Number(currentTotal.replace(/ /g, "")) + 1000 : currentTotal;
+        ? Number(currentTotal.replace(/ /g, "")) + Number(deliveryCost) : currentTotal;
     finishTotal = formatNumber(finishTotal);
-    console.dir(orderProducts);
-
-    const onClickHandler = async  () => {
-
-        setLoading(true);
-        setError(null);
-        console.log("Click!")
-
-        try {
-            const response = await postOrder({name, surname, phone, email, address, comment, paymentMethod, deliveryMethod});
-            const data = await response.json();
-            if (data.success) {
-                setOrderProducts(data.data.cart);
-                navigate(`/`)
-            } else {
-                setError(data.data.message);
-            }
-        } catch (err) {
-            setError('Произошла ошибка при загрузке корзины');
-        } finally {
-            setLoading(false);
-        }
-    }
+    deliveryCost = formatNumber(deliveryCost);
 
     return(
         <section className="order-form">
@@ -204,11 +169,15 @@ const  OrderForm = () => {
                         <p className="order-info__total-title-with-sale">Цена со скидкой</p>
                         <p className="order-info__total-with-sale">{currentTotal} ₽</p>
                     </div>
-                    <div className={deliveryMethod === "flat_rate" ? "order-info__delivery-price-wrapper" : "order-info__wrapper--hidden"}>
+                    <div className={deliveryMethod === "flat_rate"
+                        ? "order-info__delivery-price-wrapper"
+                        : "order-info__wrapper--hidden"}>
                         <p className="order-info__delivery-price-title">Стоимость доставки</p>
-                        <p className="order-info__delivery-price-text">1 000 ₽</p>
+                        <p className="order-info__delivery-price-text">{deliveryCost} ₽</p>
                     </div>
-                    <div className={deliveryMethod === "flat_rate" ? "order-info__finish-total-wrapper" : "order-info__wrapper--hidden"}>
+                    <div className={deliveryMethod === "flat_rate"
+                        ? "order-info__finish-total-wrapper"
+                        : "order-info__wrapper--hidden"}>
                         <p className="order-info__finish-total-title">Итоговая стоимость</p>
                         <p className="order-info__finish-total-text">{finishTotal} ₽</p>
                     </div>
@@ -280,7 +249,11 @@ const  OrderForm = () => {
                     <button
                         className="order-info__button"
                         disabled={isButtonDisabled}
-                        onClick={() => onClickHandler()}
+                        onClick={() => {
+                            postOrder()
+                            navigate('/')
+                        }
+                    }
                     >
                         Оформить заказ
                     </button>
