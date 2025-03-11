@@ -1,97 +1,73 @@
-import {deleteCartItem, decreaseCartItem, increaseCartItem} from "../../../features/cart/api/cart.request.tsx";
 import CartButton from "../../../assets/CartButton.tsx";
 import "./CartItem.scss"
 import {useState} from "react";
-import fixTotalPrice from "../../../shared/functions/FixTotalPrice.tsx"
+import conversionHTMLToString from "../../../shared/functions/ConversionHTMLToString.tsx"
+import formatNumber from "../../../shared/functions/FormatNumber.tsx";
+import {useRequest} from "../../../shared/hooks/useRequest.ts";
 
-const CartItem = ({product, handleDeleteItem, cartItems, setCartItems}) => {
+const CartItem = ({product, cartItems, setCartItems}) => {
     const [productState, setProductState] = useState(product);
     const {categories, name, size, price, cart_item_key: cartItemKey, quantity,subtotal, image, id} = productState;
-    const {regular: regularPrice, current: currentPrice} = price;
-    const {regular: regularSubtotal, current: currentSubtotal} = subtotal;
-    const regExp = /\s*-\s*\d+(\.\d+)?$/;
-    const newPrice = currentPrice.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");
-    const newName = name.replace(regExp, '');
+    const {current: currentPrice} = price;
+    const {current: currentSubtotal} = subtotal;
+    const newPrice = formatNumber(currentPrice);
+    const newName = name.replace(/\s*-\s*\d+(\.\d+)?$/, '');
     const newSize = size === "" ? "Универсальный" : size.replace(/-/g, ',');
-    let newSubtotal: number|string = fixTotalPrice(currentSubtotal);
-    newSubtotal = newSubtotal.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1 ');
+    const newSubtotal: number|string = formatNumber(conversionHTMLToString(currentSubtotal));
+
+    const {makeRequest: deleteCartItem} = useRequest({
+        method: "POST", body:{action: 'remove_from_cart', cart_item_key: cartItemKey}});
+    const {makeRequest: decreaseCartItem} = useRequest({
+        method: "POST", body:{action: 'decrease_cart_item_quantity', cart_item_key: cartItemKey}});
+    const {makeRequest: increaseCartItem} = useRequest({
+        method: "POST", body:{action: 'increase_cart_item_quantity', cart_item_key: cartItemKey}});
+
 
     const handleRemoveFromCart = async () => {
-        try {
-            handleDeleteItem(id)
-
-            const response = await deleteCartItem(cartItemKey)
-
-            if (!response.ok) {
-                throw new Error(`Ошибка HTTP: ${response.status}`);
-            }
-
-        } catch (error) {
-            console.error('Произошла ошибка:', error.message);
-        }
+        deleteCartItem();
+        const newCartItems = cartItems.filter(item => item?.id !== id);
+        setCartItems(newCartItems);
     };
 
     const handleDecreaseCartItem = async () => {
-        try{
-
-            if (productState.quantity < 2) {
-                handleDeleteItem(id)
-                console.log("Delete")
-            }
-            if (productState.quantity > 1) {
-                const newCartItems = cartItems.map((item) => {
-                    if (item.cart_item_key === cartItemKey) {
-                        return {
-                            ...item, quantity: item.quantity - 1,
-                            subtotal: {regular: Number(item.subtotal.regular) - Number(item.price.regular),
-                                current: Number(item.subtotal.current) - Number(item.price.current)}
-                        }
-                    }else{
-                        return item
-                    }
-                })
-                setCartItems(newCartItems);
-                setProductState({...product, quantity: product.quantity + 1})
-            }
-
-
-            const response = await decreaseCartItem(cartItemKey);
-
-            if (!response.ok) {
-                throw new Error(`Ошибка HTTP: ${response.status}`);
-            }
-
-        } catch(error) {
-            console.error('Ошибка запроса:', error.message)
+        if (productState.quantity < 2) {
+            handleRemoveFromCart()
         }
-    }
 
-    const handleIncreaseCartItem = async () => {
-        try{
+        if (productState.quantity > 1) {
             const newCartItems = cartItems.map((item) => {
                 if (item.cart_item_key === cartItemKey) {
                     return {
-                        ...item, quantity: item.quantity + 1,
-                        subtotal: {regular: Number(item.subtotal.regular) + Number(item.price.regular),
-                            current: Number(item.subtotal.current) + Number(item.price.current)}
+                        ...item, quantity: item.quantity - 1,
+                        subtotal: {regular: Number(item.subtotal.regular) - Number(item.price.regular),
+                            current: Number(item.subtotal.current) - Number(item.price.current)}
                     }
                 }else{
                     return item
                 }
             })
             setCartItems(newCartItems);
-            setProductState({...product, quantity: product.quantity + 1})
 
-            const response = await increaseCartItem(cartItemKey);
-
-            if (!response.ok) {
-                throw new Error(`Ошибка HTTP: ${response.status}`);
-            }
-
-
-        } catch(error) {
-            console.error('Ошибка запроса:', error.message)
+            setProductState({...product, quantity: product.quantity - 1})
+            decreaseCartItem();
         }
+    }
+
+    const handleIncreaseCartItem = async () => {
+        const newCartItems = cartItems.map((item) => {
+            if (item.cart_item_key === cartItemKey) {
+                return {
+                    ...item, quantity: item.quantity + 1,
+                    subtotal: {regular: Number(item.subtotal.regular) + Number(item.price.regular),
+                        current: Number(item.subtotal.current) + Number(item.price.current)}
+                }
+            }else{
+                return item
+            }
+        })
+        setCartItems(newCartItems);
+        setProductState({...product, quantity: product.quantity + 1})
+        increaseCartItem()
     }
 
     return (

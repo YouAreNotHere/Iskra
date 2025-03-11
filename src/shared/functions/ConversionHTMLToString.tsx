@@ -1,4 +1,4 @@
-const fixTotalPrice = (total: number) =>{
+const conversionHTMLToString = (total: number) =>{
     const newTotal = total
         .toString()
         .replace(/<[^>]+>/g, '')
@@ -10,4 +10,4 @@ const fixTotalPrice = (total: number) =>{
     return Number(newTotal);
 }
 
-export default fixTotalPrice;
+export default conversionHTMLToString;

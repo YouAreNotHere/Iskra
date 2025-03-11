@@ -19,11 +19,11 @@ interface IUseRequestProps {
   body?: PostOrderData;
   params?: any;
   onSuccess?: (data: any) => void;
+  url?: string;
 }
 
 const useRequest = (props: IUseRequestProps) => {
-  const { method, body: bodyData, params, onSuccess } = props;
-
+  const { method, body: bodyData, url, params, onSuccess } = props;
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +34,8 @@ const useRequest = (props: IUseRequestProps) => {
   const body= new URLSearchParams({
     ...bodyData
   }).toString()
+
+
 
   const makeRequest = async () => {
     setIsLoading(true);
@@ -49,26 +51,27 @@ const useRequest = (props: IUseRequestProps) => {
           },
         });
       } else {
-        response = await fetch(ajaxUrl, {
+        response = await fetch(url, {
           method,
           ...params,
           credentials: 'include',
           headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/x-www-form-urlencoded',
           },
         });
       }
 
       if (response.ok) {
         const data = await response.json();
-        setData(data);
+        await setData(data);
+        console.dir(data)
         setErrorMessage(null);
         if (onSuccess) {
           onSuccess(data);
         }
       } else {
         const error = await response.json();
-
+        console.dir(data)
         if (response.status === 401) {
           navigate('/auth');
         }

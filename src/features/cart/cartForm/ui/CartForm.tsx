@@ -3,14 +3,14 @@ import CartButton from "../../../../assets/CartButton.tsx";
 import {useNavigate} from "react-router-dom";
 import {useState, useEffect} from "react";
 import CartItem from "../../cartItem/CartItem.tsx";
-import {getCartItems} from "../../api/cart.request.tsx";
-import FormatTotal from "../../../../shared/functions/FormatTotal.tsx";
+import calcTotal from "../../../../shared/functions/CalcTotal.tsx";
 import FormatNumber from "../../../../shared/functions/FormatNumber.tsx";
+import {useRequest} from "../../../../shared/hooks/useRequest.ts";
 
 const CartForm = () => {
     const [cartItems, setCartItems] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const {data, makeRequest: getCartItems, isLoading: loading, errorMessage:error} = useRequest(
+        {method: "POST", body: {action: 'get_cart_contents'}});
     const navigate = useNavigate();
 
     const deleteCartItemFromState = (id: string) => {
@@ -18,38 +18,22 @@ const CartForm = () => {
         setCartItems(newCartItems);
     }
 
-    const getCartContents = async () => {
-        setLoading(true);
-        setError(null);
-
-        try {
-            const response = await getCartItems();
-            const data = await response.json();
-            if (data.success) {
-                setCartItems(data.data.cart);
-            } else {
-                setError(data.data.message);
-            }
-        } catch (err) {
-            setError('Произошла ошибка при загрузке корзины');
-        } finally {
-            setLoading(false);
-        }
-    };
+    useEffect(() => {
+        getCartItems();
+    }, []);
 
     useEffect(() => {
-        getCartContents();
-    }, []);
+        if (data) {
+            setCartItems(data.data.cart);
+        }
+    }, [data]);
 
     if (loading) return <p>Загрузка корзины...</p>;
     if (error) return <p style={{ color: 'red' }}>{error}</p>;
 
-    const regularTotal = FormatTotal(cartItems, "regular");
-    const currentTotal =  FormatTotal(cartItems, "current");
+    const regularTotal = calcTotal(cartItems, "regular");
+    const currentTotal =  calcTotal(cartItems, "current");
     const sale: number | string = FormatNumber(regularTotal.replace(/ /g, '') - currentTotal.replace(/ /g, ''));
-
-
-    console.dir(cartItems)
 
     return(
         <section className="cart">

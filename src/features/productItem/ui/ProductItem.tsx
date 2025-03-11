@@ -1,19 +1,9 @@
-// import Product from "../../shared/types/IProduct.ts";
 import "./ProductItem.scss"
-import Product from "@shared/types/IProduct.ts";
+import IProductListItem from "../../productList/type/IProductListItem.tsx";
 import {useNavigate} from "react-router-dom";
-import productsList from "@/features/productList/ProductsList.tsx";
-
-interface ProductItem {
-    image: string;
-    price: string;
-    name: string;
-    description: string;
-    id: number;
-}
 
 interface Props {
-    product: Product
+    product: IProductListItem
 }
 
 const ProductItem = ({product}: Props) => {

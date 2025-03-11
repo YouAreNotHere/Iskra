@@ -2,7 +2,7 @@ import './OrderForm.scss';
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import OrderProduct from "../../orderProduct/OrderProduct.tsx";
-import formatTotal from "../../../../shared/functions/FormatTotal.tsx";
+import formatTotal from "../../../../shared/functions/CalcTotal.tsx";
 import formatNumber from "../../../../shared/functions/FormatNumber.tsx";
 import {useRequest} from "../../../../shared/hooks/useRequest.ts";
 
@@ -41,6 +41,7 @@ const  OrderForm = () => {
         ? Number(currentTotal.replace(/ /g, "")) + Number(deliveryCost) : currentTotal;
     finishTotal = formatNumber(finishTotal);
     deliveryCost = formatNumber(deliveryCost);
+    console.dir(data)
 
     return(
         <section className="order-form">

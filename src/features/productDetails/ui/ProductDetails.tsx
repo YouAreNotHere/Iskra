@@ -4,6 +4,7 @@ import {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {ajaxUrl} from "../../../shared/url/url.tsx";
 import {addToCartItem} from "../api/product.request.tsx";
+import {useRequest} from "../../../shared/hooks/useRequest.ts";
 
 interface Product{
     description: string;
@@ -19,40 +20,40 @@ interface Product{
 
 
 const ProductDetails = () => {
-
-    const { slug } = useParams(); // Получаем слаг из URL
+    const { slug } = useParams();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [selectedSize, setSelectedSize] = useState(null);
     const [addToCartLoading, setAddToCartLoading] = useState(false);
     const [addToCartError, setAddToCartError] = useState(null);
+    const {data, makeRequest: getProduct, isLoading, errorMessage} = useRequest(
+        {method: "GET", url: `${ajaxUrl}?action=get_product_by_slug&slug=${slug}`});
 
     const fetchProductBySlug = async (slug: string) => {
-        try {
-            const response = await fetch(`${ajaxUrl}?action=get_product_by_slug&slug=${slug}`);
-            if (!response.ok) throw new Error('Не удалось загрузить товар');
-            const data = await response.json();
-            console.dir(data)
-            return data.data;
-        } catch (err) {
-            console.error(err);
-            setError(true);
-        } finally {
-            setLoading(false);
-        }
+        getProduct();
+        if (!response.ok) throw new Error('Не удалось загрузить товар');
+        const data = await response.json();
+        console.dir(data)
+        return data.data;
     };
 
     useEffect(() => {
         if (slug) {
-            fetchProductBySlug(slug).then((productData) => {
-                if (productData) {
-                    setProduct(productData);
-                }
-            });
+            getProduct()
         }
     }, [slug]);
 
+    useEffect(() => {
+        if (data) {
+            console.log(data.data)
+            setProduct(data.data);
+        }
+    }, [data]);
+
+    const {makeRequest: addItemToCart} = useRequest(
+        {method: "POST", body:
+                {action:  'add_to_cart', product_id: product?.id?.toString(), quantity: "1", size: selectedSize}});
 
     if (loading) return <div>Загрузка...</div>;
     if (error) return <div>Произошла ошибка при загрузке товара</div>;
@@ -83,6 +84,7 @@ const ProductDetails = () => {
     }
 
     if (!selectedSize) setSelectedSize(sizes[0]);
+
     const selectClassName = (size: number | string) => {
         if (selectedSize === "Универсальный") {
             return "product-card__possible-sizes-item product-card__possible-sizes-item--selected product-card__possible-sizes-item--universal";
@@ -92,6 +94,7 @@ const ProductDetails = () => {
         }
         if (selectedSize !== size) return "product-card__possible-sizes-item"
     }
+
 
     const handleAddToCart = async (size, id) => {
         setAddToCartLoading(true);
