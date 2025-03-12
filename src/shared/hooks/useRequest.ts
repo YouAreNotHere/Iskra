@@ -12,6 +12,9 @@ interface PostOrderData {
   comment?: string;
   paymentMethod?: string;
   deliveryMethod?: string;
+  product_id?: number | string;
+  quantity?: string;
+  size?: string | null;
 }
 
 interface IUseRequestProps {
@@ -30,18 +33,19 @@ const useRequest = (props: IUseRequestProps) => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [data, setData] = useState<any>(null);
 
-
-  const body= new URLSearchParams({
-    ...bodyData
-  }).toString()
-
-
-
   const makeRequest = async () => {
     setIsLoading(true);
     try {
       let response;
       if (method === 'POST') {
+
+        //Поправить bodyData, там вроде должны быть только строки.
+        
+
+        const body= new URLSearchParams({
+          ...bodyData
+        }).toString()
+
         response = await fetch(ajaxUrl, {
           method,
           body,
@@ -51,6 +55,11 @@ const useRequest = (props: IUseRequestProps) => {
           },
         });
       } else {
+
+        if (!url) {
+          throw new Error("URL is required for GET request");
+        }
+
         response = await fetch(url, {
           method,
           ...params,

@@ -3,40 +3,40 @@ import "./ProductDetails.scss"
 import {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {ajaxUrl} from "../../../shared/url/url.tsx";
-import {addToCartItem} from "../api/product.request.tsx";
 import {useRequest} from "../../../shared/hooks/useRequest.ts";
 
 interface Product{
-    description: string;
-    gallery_images: [];
-    id: number;
-    name: string;
-    price: number;
-    categories: [];
-    brand: [];
     article: string;
-    attributes: [];
+    attributes: {
+        material: string[],
+        pa_size?: string[],
+        size?: string[],
+        stone?: string[],
+    };
+    brand: {
+      link: string,
+      name: string,
+      slug: string,
+    };
+    categories: string[];
+    description: string;
+    gallery_images: string[];
+    id: number;
+    is_on_sale: boolean;
+    name: string;
+    price: string;
+    tags?: [];
 }
 
 
 const ProductDetails = () => {
     const { slug } = useParams();
-    const [product, setProduct] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(false);
-    const [selectedSize, setSelectedSize] = useState(null);
-    const [addToCartLoading, setAddToCartLoading] = useState(false);
-    const [addToCartError, setAddToCartError] = useState(null);
+    const [product, setProduct] = useState<null | Product>(null);
+    const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const {data, makeRequest: getProduct, isLoading, errorMessage} = useRequest(
         {method: "GET", url: `${ajaxUrl}?action=get_product_by_slug&slug=${slug}`});
 
-    const fetchProductBySlug = async (slug: string) => {
-        getProduct();
-        if (!response.ok) throw new Error('Не удалось загрузить товар');
-        const data = await response.json();
-        console.dir(data)
-        return data.data;
-    };
+
 
     useEffect(() => {
         if (slug) {
@@ -51,12 +51,16 @@ const ProductDetails = () => {
         }
     }, [data]);
 
-    const {makeRequest: addItemToCart} = useRequest(
+    const {makeRequest: addItemToCart, isLoading: isAddToCartLoading, errorMessage: addItemError} = useRequest(
         {method: "POST", body:
                 {action:  'add_to_cart', product_id: product?.id?.toString(), quantity: "1", size: selectedSize}});
 
-    if (loading) return <div>Загрузка...</div>;
-    if (error) return <div>Произошла ошибка при загрузке товара</div>;
+    const isButtonsDisabled: boolean = isLoading || isAddToCartLoading;
+
+
+    if (!product) return <div>Загрузка...</div>;
+    if (errorMessage) return <div>Произошла ошибка при загрузке товара</div>;
+    if (addItemError) console.log(addItemError);
 
     const formatText = (text: string) => {
         const regex: RegExp = /(\*\*(.*?)\*\*|[^*]+)/g;
@@ -71,19 +75,21 @@ const ProductDetails = () => {
                 result.push(`${match[0].trim()}`);
             }
         }
-
         return result.join("");
     };
     const {description, gallery_images: galleryImages, id, name, price, categories, brand, article, attributes, regular_price: regularPrice} = product;
-    const {stone, material} = attributes;
-    let sizes: string;
-    if (attributes.pa_size){
-        sizes = attributes.pa_size;
+    const {stone,material,size, pa_size} = attributes;
+    let sizes: string | string[];
+
+    if (pa_size){
+        sizes = pa_size;
+    }else if (size){
+        sizes = size
     }else{
-        sizes = attributes.size
+        return
     }
 
-    if (!selectedSize) setSelectedSize(sizes[0]);
+    if (!selectedSize && sizes) setSelectedSize(sizes[0]);
 
     const selectClassName = (size: number | string) => {
         if (selectedSize === "Универсальный") {
@@ -94,30 +100,6 @@ const ProductDetails = () => {
         }
         if (selectedSize !== size) return "product-card__possible-sizes-item"
     }
-
-
-    const handleAddToCart = async (size, id) => {
-        setAddToCartLoading(true);
-        setAddToCartError(null);
-
-        try {
-            const response = await addToCartItem(size, id)
-
-            const data = await response.json();
-
-            if (data.success) {
-                alert(data.data.message); // Успешное сообщение
-            } else {
-                setError(data.data.message); // Ошибка
-            }
-        } catch (err) {
-            setAddToCartError('Произошла ошибка при добавлении в корзину');
-        } finally {
-            setAddToCartLoading(false);
-        }
-    };
-
-    console.dir(product)
 
     return(
         <section className="product-card">
@@ -136,7 +118,7 @@ const ProductDetails = () => {
                 </div>
                 <h1 className="product-card__title">{name}</h1>
                 <p
-                    className={regularPrice === price
+                    className={(regularPrice === price || regularPrice === "")
                         ? "product-card__price"
                         : "product-card__price product-card__price--sale"}>
                     {price}
@@ -146,12 +128,12 @@ const ProductDetails = () => {
                     : <p className="product-card__price product-card__price--old">{regularPrice}</p>}
                 <div className="product-card__material">
                     <p>Материал</p>
-                    <p>{attributes.material}</p>
+                    <p>{material}</p>
                 </div>
 
                 <div className="product-card__stone">
                     <p>Камень</p>
-                    <p>{attributes.stone}</p>
+                    <p>{stone}</p>
                 </div>
                 <div className="product-card__possible-sizes">
                     <p>Размер</p>
@@ -171,7 +153,8 @@ const ProductDetails = () => {
                 <div className="product-card__add-buttons-wrapper">
                     <button
                         className="product-card__button--add-to-cart"
-                        onClick={() => handleAddToCart(selectedSize, id)}
+                        disabled={isButtonsDisabled}
+                        onClick={() => addItemToCart()}
                     >
                         Добавить в корзину
                     </button>
