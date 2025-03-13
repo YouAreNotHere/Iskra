@@ -2,7 +2,7 @@ import './OrderForm.scss';
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import OrderProduct from "../../orderProduct/OrderProduct.tsx";
-import formatTotal from "../../../../shared/functions/CalcTotal.tsx";
+import CalcTotal from "../../../../shared/functions/CalcTotal.tsx";
 import formatNumber from "../../../../shared/functions/FormatNumber.tsx";
 import {useRequest} from "../../../../shared/hooks/useRequest.ts";
 import IOrderProduct from "../../types/IOrderProduct.tsx";
@@ -33,8 +33,8 @@ const  OrderForm = () => {
     if (!data) return <p> Загрузка...</p>
 
     const orderProducts: IOrderProduct[] = data.data.cart;
-    const regularTotal = formatTotal(orderProducts, "regular");
-    const currentTotal = formatTotal(orderProducts, "current");
+    const regularTotal = CalcTotal(orderProducts, "regular");
+    const currentTotal = CalcTotal(orderProducts, "current");
     let deliveryCost = (data.data.totals.shipping_cost
         .replace(/(\d[\d\s]*)\.\d+/, '$1')
         .replace(/\s+/g, ''))

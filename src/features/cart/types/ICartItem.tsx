@@ -16,6 +16,7 @@ interface ICartItem{
     quantity: number;
     size: string;
     subtotal:{
+        [key: string]: number;
         regular: number,
         current: number,
     }

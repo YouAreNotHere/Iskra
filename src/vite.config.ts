@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/wp-admin': {
-        target: import.meta.env.VITE_WORDPRESS_URL, // Используем переменную окружения
+        target: (import.meta.env as any).VITE_WORDPRESS_URL,
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/wp-admin/, ''),

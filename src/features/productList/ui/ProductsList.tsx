@@ -32,7 +32,7 @@ const ProductsList: React.FC = () => {
         <>
             {products.length > 0 ? (
                 <ul className="products-list">
-                    {products.map((product: Product) => (
+                    {products.map((product: IProductListItem) => (
                       <li key={product.id}>
                           <ProductItem product = {product}/>
                       </li>))}
