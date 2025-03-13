@@ -4,10 +4,18 @@ import {useState} from "react";
 import conversionHTMLToString from "../../../shared/functions/ConversionHTMLToString.tsx"
 import formatNumber from "../../../shared/functions/FormatNumber.tsx";
 import {useRequest} from "../../../shared/hooks/useRequest.ts";
+import ICartItem from "../../cart/types/ICartItem.tsx";
 
-const CartItem = ({product, cartItems, setCartItems}) => {
+interface Props{
+    product: ICartItem;
+    cartItems: ICartItem[];
+    setCartItems:  React.Dispatch<React.SetStateAction<[] | ICartItem[]>>;
+}
+
+const CartItem = ({product, cartItems, setCartItems}: Props) => {
     const [productState, setProductState] = useState(product);
-    const {categories, name, size, price, cart_item_key: cartItemKey, quantity,subtotal, image, id} = productState;
+    const {categories, name, size, price, cart_item_key: cartItemKey,
+        quantity,subtotal, image, id} = productState;
     const {current: currentPrice} = price;
     const {current: currentSubtotal} = subtotal;
     const newPrice = formatNumber(currentPrice);

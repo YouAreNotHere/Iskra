@@ -1,6 +1,11 @@
 import "./OrderProduct.scss"
+import IOrderProduct from "../types/IOrderProduct.tsx";
 
-const OrderProduct = ({product}) => {
+interface Props{
+    product:IOrderProduct;
+}
+
+const OrderProduct = ({product}: Props) => {
     const {categories, name, subtotal, attributes} = product;
     const newSize = attributes.pa_size ? attributes.pa_size.replace(/-/g, ',') : "Универсальный";
     const newPrice = subtotal.current.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1 ");

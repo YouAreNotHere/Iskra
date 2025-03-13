@@ -4,39 +4,14 @@ import {useState, useEffect} from "react";
 import {useParams} from "react-router-dom";
 import {ajaxUrl} from "../../../shared/url/url.tsx";
 import {useRequest} from "../../../shared/hooks/useRequest.ts";
-
-interface Product{
-    article: string;
-    attributes: {
-        material: string[],
-        pa_size?: string[],
-        size?: string[],
-        stone?: string[],
-    };
-    brand: {
-      link: string,
-      name: string,
-      slug: string,
-    };
-    categories: string[];
-    description: string;
-    gallery_images: string[];
-    id: number;
-    is_on_sale: boolean;
-    name: string;
-    price: string;
-    tags?: [];
-}
-
+import IProductDetails from "../types/IProductDetails.tsx";
 
 const ProductDetails = () => {
     const { slug } = useParams();
-    const [product, setProduct] = useState<null | Product>(null);
-    const [selectedSize, setSelectedSize] = useState<string | null>(null);
+    const [product, setProduct] = useState<null | IProductDetails>(null);
+    const [selectedSize, setSelectedSize] = useState<string>("");
     const {data, makeRequest: getProduct, isLoading, errorMessage} = useRequest(
         {method: "GET", url: `${ajaxUrl}?action=get_product_by_slug&slug=${slug}`});
-
-
 
     useEffect(() => {
         if (slug) {
@@ -77,9 +52,9 @@ const ProductDetails = () => {
         }
         return result.join("");
     };
-    const {description, gallery_images: galleryImages, id, name, price, categories, brand, article, attributes, regular_price: regularPrice} = product;
+    const {description, gallery_images: galleryImages, name, price, categories, brand, article, attributes, regular_price: regularPrice} = product;
     const {stone,material,size, pa_size} = attributes;
-    let sizes: string | string[];
+    let sizes: string[];
 
     if (pa_size){
         sizes = pa_size;
@@ -91,7 +66,7 @@ const ProductDetails = () => {
 
     if (!selectedSize && sizes) setSelectedSize(sizes[0]);
 
-    const selectClassName = (size: number | string) => {
+    const selectClassName = (size: string) => {
         if (selectedSize === "Универсальный") {
             return "product-card__possible-sizes-item product-card__possible-sizes-item--selected product-card__possible-sizes-item--universal";
         }
@@ -138,7 +113,7 @@ const ProductDetails = () => {
                 <div className="product-card__possible-sizes">
                     <p>Размер</p>
                     <ul>
-                        {sizes.map((sizeItem: string | number) => (
+                        {sizes.map((sizeItem: string) => (
                             <li key={sizeItem}>
                                 <button
                                     onClick={() => setSelectedSize(sizeItem)}

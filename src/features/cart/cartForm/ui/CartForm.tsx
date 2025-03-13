@@ -6,17 +6,13 @@ import CartItem from "../../cartItem/CartItem.tsx";
 import calcTotal from "../../../../shared/functions/CalcTotal.tsx";
 import FormatNumber from "../../../../shared/functions/FormatNumber.tsx";
 import {useRequest} from "../../../../shared/hooks/useRequest.ts";
+import ICartItem from "../../types/ICartItem.tsx";
 
 const CartForm = () => {
-    const [cartItems, setCartItems] = useState([]);
+    const [cartItems, setCartItems] = useState<ICartItem[] | []>([]);
     const {data, makeRequest: getCartItems, isLoading: loading, errorMessage:error} = useRequest(
         {method: "POST", body: {action: 'get_cart_contents'}});
     const navigate = useNavigate();
-
-    const deleteCartItemFromState = (id: string) => {
-        const newCartItems = cartItems.filter(item => item?.id !== id);
-        setCartItems(newCartItems);
-    }
 
     useEffect(() => {
         getCartItems();
@@ -33,7 +29,8 @@ const CartForm = () => {
 
     const regularTotal = calcTotal(cartItems, "regular");
     const currentTotal =  calcTotal(cartItems, "current");
-    const sale: number | string = FormatNumber(regularTotal.replace(/ /g, '') - currentTotal.replace(/ /g, ''));
+    const sale:  string = FormatNumber(Number(regularTotal.replace(/ /g, ''))
+        - Number(currentTotal.replace(/ /g, '')));
 
     return(
         <section className="cart">
@@ -56,7 +53,6 @@ const CartForm = () => {
                                 product={item}
                                 cartItems={cartItems}
                                 setCartItems={setCartItems}
-                                handleDeleteItem={deleteCartItemFromState}
                             />
                         ))}
                     </div>

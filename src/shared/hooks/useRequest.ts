@@ -12,9 +12,10 @@ interface PostOrderData {
   comment?: string;
   paymentMethod?: string;
   deliveryMethod?: string;
-  product_id?: number | string;
+  product_id?:  string;
   quantity?: string;
-  size?: string | null;
+  size?: string;
+  cart_item_key?: string;
 }
 
 interface IUseRequestProps {
@@ -40,7 +41,7 @@ const useRequest = (props: IUseRequestProps) => {
       if (method === 'POST') {
 
         //Поправить bodyData, там вроде должны быть только строки.
-        
+
 
         const body= new URLSearchParams({
           ...bodyData
