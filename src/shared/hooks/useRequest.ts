@@ -16,6 +16,7 @@ interface PostOrderData {
   quantity?: string;
   size?: string;
   cart_item_key?: string;
+  slug? : string;
 }
 
 interface IUseRequestProps {

@@ -5,7 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navigation from "./shared/navigation/Navigation.tsx";
 import ProductsList from "./features/productList/ui/ProductsList.tsx";
 import OrderForm from "./features/order/orderForm/ui/OrderForm.tsx";
-import About from "./features/about/About.tsx";
+import AboutPage from "./features/about/AboutPage.tsx";
+import DeliveryAndPaymentPage from "./features/deliveryAndPayment/DeliveryAndPaymentPage.tsx";
 
 function App() {
 
@@ -36,7 +37,12 @@ function App() {
             <Route
                 path="/о-нас"
                 element={
-                    <About/>
+                    <AboutPage/>
+                }/>
+            <Route
+                path="/доставка-и-оплата"
+                element={
+                    <DeliveryAndPaymentPage/>
                 }/>
         </Routes>
     </Router>

@@ -34,7 +34,9 @@ const Navigation = () => {
                     <button className = "navigation__button navigation__button--news">
                         Новости
                     </button>
-                    <button className = "navigation__button navigation__button--delivery">
+                    <button
+                        onClick={()=> navigate("/доставка-и-оплата")}
+                        className = "navigation__button navigation__button--delivery">
                         Доставка и оплата
                     </button>
                 </div>
