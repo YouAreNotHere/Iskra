@@ -1,22 +1,39 @@
 @import "../variable/variable";
 
-.product-card__additional-info{
+.additional-info{
   width: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   margin-bottom: 20px;
 }
 
-.product-card__additional-info p{
+.additional-info__wrapper{
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.additional-info__title{
   font-weight: 400;
   font-size: 20px;
   line-height: 28px;
   letter-spacing: 0;
   margin: 10px 0 10px 0;
   color: $black-text;
+  text-align: start;
 }
 
-.product-card__button--show-additional-info{
+.additional-info__button{
   border: 0;
   background-color: transparent;
+}
+
+.additional-info__text{
+  font-weight: 800;
+  text-align: start;
+}
+
+.additional-info__text--hidden{
+  display: none;
 }

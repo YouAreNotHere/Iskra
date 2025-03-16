@@ -1,14 +1,20 @@
+@import "../../../shared/variable/variable";
+
 .products-list {
   list-style: none;
-  //display: grid;
-  //grid-template-columns: 1fr;
-  //gap: 1rem;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
   justify-content: space-around;
+  padding: 0;
+  margin: 0 109px 0 109px;
+  box-sizing: border-box;
 
-  @media (min-width: 576px) {
-    grid-template-columns: 0.5fr 0.5fr;
+  @media (max-width: $mobile-width-only) {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 0 auto;
   }
 
   //@media (min-width: 800px) {
@@ -18,4 +24,14 @@
   //@media (min-width: 1200px) {
   //  grid-template-columns: 1fr 1fr 1fr 1fr;
   //}
+
+  li{
+    background-color: white;
+    border: 1px solid #ccc;
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 0 10px rgba(1, 1, 1, 0.5);
+    }
+  }
 }

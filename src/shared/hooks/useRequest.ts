@@ -17,6 +17,8 @@ interface PostOrderData {
   size?: string;
   cart_item_key?: string;
   slug? : string;
+  page?: string;
+  per_page?: string;
 }
 
 interface IUseRequestProps {
@@ -40,9 +42,6 @@ const useRequest = (props: IUseRequestProps) => {
     try {
       let response;
       if (method === 'POST') {
-
-        //Поправить bodyData, там вроде должны быть только строки.
-
 
         const body= new URLSearchParams({
           ...bodyData
@@ -75,14 +74,12 @@ const useRequest = (props: IUseRequestProps) => {
       if (response.ok) {
         const data = await response.json();
         await setData(data);
-        console.dir(data)
         setErrorMessage(null);
         if (onSuccess) {
           onSuccess(data);
         }
       } else {
         const error = await response.json();
-        console.dir(data)
         if (response.status === 401) {
           navigate('/auth');
         }

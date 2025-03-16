@@ -7,6 +7,8 @@ import ProductsList from "./features/productList/ui/ProductsList.tsx";
 import OrderForm from "./features/order/orderForm/ui/OrderForm.tsx";
 import AboutPage from "./features/about/AboutPage.tsx";
 import DeliveryAndPaymentPage from "./features/deliveryAndPayment/DeliveryAndPaymentPage.tsx";
+import Account from "./features/account/Account.tsx";
+import News from "./features/news/News.tsx"
 
 function App() {
 
@@ -43,6 +45,16 @@ function App() {
                 path="/доставка-и-оплата"
                 element={
                     <DeliveryAndPaymentPage/>
+                }/>
+            <Route
+                path="/account"
+                element={
+                    <Account/>
+                }/>
+            <Route
+                path="/новости"
+                element={
+                    <News/>
                 }/>
         </Routes>
     </Router>

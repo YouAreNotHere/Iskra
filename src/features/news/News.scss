@@ -1,0 +1,49 @@
+.news-container{
+  width: 60%;
+  margin: 0 auto;
+
+  h1{
+    font-weight: 400;
+    font-size: 60px;
+    line-height: 60px;
+    letter-spacing: 0;
+    color: #1E1E1E;
+    margin: 20px 0 30px 0;
+  }
+}
+
+.news{
+  text-align: justify;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+
+  h2{
+    text-align: start;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 34px;
+    margin: 20px 0 20px 0;
+  }
+
+  p{
+    font-size: 24px;
+  }
+}
+
+.wp-block-group{
+  //background-color: white;
+}
+
+.news__button{
+  background-color: transparent;
+  border: 0;
+  width: 200px;
+  height: 100px;
+  font-size: 24px;
+  outline: none;
+}
+
+.news__button--hidden{
+  display: none;
+}

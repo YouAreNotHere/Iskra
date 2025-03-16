@@ -10,6 +10,8 @@ const ProductDetails = () => {
     const { slug } = useParams();
     const [product, setProduct] = useState<null | IProductDetails>(null);
     const [selectedSize, setSelectedSize] = useState<string>("");
+    const [openedAdditionalInfo, setOpenedAdditionalInfo] = useState<number[]>([]);
+    const [currentImg, setCurrentImg] = useState(0);
     const {data, makeRequest: getProduct, isLoading, errorMessage} = useRequest(
         {method: "GET", url: `${ajaxUrl}?action=get_product_by_slug&slug=${slug}`});
 
@@ -21,7 +23,6 @@ const ProductDetails = () => {
 
     useEffect(() => {
         if (data) {
-            console.log(data.data)
             setProduct(data.data);
         }
     }, [data]);
@@ -52,8 +53,23 @@ const ProductDetails = () => {
         }
         return result.join("");
     };
-    const {description, gallery_images: galleryImages, name, price, categories, brand, article, attributes, regular_price: regularPrice} = product;
+    const {description, gallery_images: galleryImages,
+        name, price, categories, brand,
+        article, attributes,
+        regular_price: regularPrice} = product;
     const {stone,material,size, pa_size} = attributes;
+
+
+    const onDecreaseImgSlider = () => {
+        if (currentImg < 1) return
+        setCurrentImg(currentImg - 1)
+    }
+
+    const onIncreaseImgSlider = () => {
+        if (currentImg >= galleryImages.length - 1) return
+        setCurrentImg(currentImg + 1)
+    }
+
     let sizes: string[];
 
     if (pa_size){
@@ -80,13 +96,37 @@ const ProductDetails = () => {
         <section className="product-card">
             <div className="product-card__images-wrapper">
                     {galleryImages.map((image: string, index: number) => (
-                        <img key={index} src={image} className="product-card__image"/>
+                        <img
+                            key={index}
+                            src={image}
+                            className={index === currentImg ? "product-card__image--current" : "product-card__image"}
+                        />
                     ))}
+            </div>
+            <div className="product-card__slider">
+                <button
+                    className="product-card__button--decrease-slider"
+                    onClick={onDecreaseImgSlider}
+                >
+                    <svg width="30" height="30" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M30 10L15 25L30 40" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                </button>
+                <button
+                    className="product-card__button--decrease-slider"
+                    onClick={onIncreaseImgSlider}
+                >
+                    <svg width="30" height="30" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20 10L35 25L20 40" stroke="#000000" stroke-width="3" stroke-linecap="round"
+                              stroke-linejoin="round"/>
+                    </svg>
+                </button>
             </div>
             <div className="product-card__description">
                 <div className="product-card__tags-wrapper">
                     <div className="product-card__item-and-collection">
-                        <p>{categories[0]}</p>
+                    <p>{categories[0]}</p>
                         <p>{brand.name}</p>
                     </div>
                     <p>{article}</p>
@@ -149,10 +189,37 @@ const ProductDetails = () => {
                     <p
                         className="product-card__text-description"
                         dangerouslySetInnerHTML={{__html: formatText(description)}}/>
-                <ShowAdditionalButton value={"в комплекте"}/>
-                <ShowAdditionalButton value={"обмен и возврат"}/>
-                <ShowAdditionalButton value={"гарантия"}/>
-                <ShowAdditionalButton value={"доставка"}/>
+                {/*<div className={}*/}
+                <ShowAdditionalButton
+                    id = {1}
+                    value={"в комплекте"}
+                    text={"Коробка, гарантийный талон, паспорт товара"}
+                    openedAdditionalInfo={openedAdditionalInfo}
+                    setOpenedAdditionalInfo={setOpenedAdditionalInfo}
+
+                />
+                <ShowAdditionalButton
+                    id={2}
+                    value={"обмен и возврат"}
+                    text={"Обмен или возврат возможен в течение 14 дней, согласно Закону \"О Защите прав потрибителей\""}
+                    openedAdditionalInfo={openedAdditionalInfo}
+                    setOpenedAdditionalInfo={setOpenedAdditionalInfo}
+                />
+                <ShowAdditionalButton
+                    id={3}
+                    value={"гарантия"}
+                    text={"Гарантия: 3 года"}
+                    openedAdditionalInfo={openedAdditionalInfo}
+                    setOpenedAdditionalInfo={setOpenedAdditionalInfo}
+                />
+                <ShowAdditionalButton
+                    id={4}
+                    value={"доставка"}
+                    // text={"Доставка осуществляется по всей России"}
+                    text={<><span>Доставка осуществляется по всей России, </span><a href="/доставка-и-оплата">подробности здесь</a></>}
+                    openedAdditionalInfo={openedAdditionalInfo}
+                    setOpenedAdditionalInfo={setOpenedAdditionalInfo}
+                />
             </div>
         </section>
 )

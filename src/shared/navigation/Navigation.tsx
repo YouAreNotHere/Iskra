@@ -1,47 +1,56 @@
 import "./Navigation.scss";
 import {useNavigate} from "react-router-dom";
+import {useState} from "react";
 
 const Navigation = () => {
     const navigate = useNavigate();
-
-    const handleCartClick = () => {
-        navigate('/cart'); // Переход на страницу корзины
-    };
-
-    const handleCatalogClick = () => {
-        navigate('/');
-    }
-
-    const handleAboutClick = () => {
-        navigate('/о-нас');
-    }
+    const [isShowMenu, setIsShowMenu] = useState<boolean>(false);
 
     return(
             <nav className="navigation">
-                <div className = "navigation__button-wrapper">
+                <button
+                    onClick={()=> setIsShowMenu(!isShowMenu)}
+                    className="navigation__burger-menu"></button>
+                <div className = {isShowMenu ? "navigation__button-wrapper" : "navigation__button-wrapper--hidden"}>
                     <button
                         className = "navigation__button navigation__button--catalog"
-                        onClick={handleCatalogClick}
+                        onClick={()=> {
+                            navigate("/")
+                            setIsShowMenu(!isShowMenu);
+                        }
+                    }
                     >
                         Каталог
                     </button>
                     <button
                         className = "navigation__button navigation__button--about"
-                        onClick={handleAboutClick}
+                        onClick={()=> {
+                            setIsShowMenu(!isShowMenu);
+                            navigate("/о-нас")}}
                     >
                         О нас
                     </button>
-                    <button className = "navigation__button navigation__button--news">
+                    <button
+                        onClick={()=> {
+                            setIsShowMenu(!isShowMenu);
+                            navigate("/новости")}}
+                        className = "navigation__button navigation__button--news">
                         Новости
                     </button>
                     <button
-                        onClick={()=> navigate("/доставка-и-оплата")}
+                        onClick={()=> {
+                            setIsShowMenu(!isShowMenu);
+                            navigate("/доставка-и-оплата")}}
                         className = "navigation__button navigation__button--delivery">
                         Доставка и оплата
                     </button>
                 </div>
                 <div className="navigation__buttons-wrapper--user">
-                    <button className="navigation__button navigation__button--user">
+                    <button
+                        onClick={()=> {
+                            setIsShowMenu(!isShowMenu);
+                            navigate("/account")}}
+                        className="navigation__button navigation__button--user">
                         <svg width="44" height="36" viewBox="0 0 44 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M25.375 13.4868C25.375 12.2915 24.707 11.2017 23.6875 10.5688C22.6328 9.97119 21.332 9.97119 20.3125 10.5688C19.2578 11.2017 18.625 12.2915 18.625 13.4868C18.625 14.7173 19.2578 15.8071 20.3125 16.4399C21.332 17.0376 22.6328 17.0376 23.6875 16.4399C24.707 15.8071 25.375 14.7173 25.375 13.4868ZM17.5 13.4868C17.5 11.9048 18.3438 10.4282 19.75 9.61963C21.1211 8.81104 22.8438 8.81104 24.25 9.61963C25.6211 10.4282 26.5 11.9048 26.5 13.4868C26.5 15.104 25.6211 16.5806 24.25 17.3892C22.8438 18.1978 21.1211 18.1978 19.75 17.3892C18.3438 16.5806 17.5 15.104 17.5 13.4868ZM15.6367 25.8618H28.3281L26.9975 21.5071C26.869 21.0866 26.4809 20.7993 26.0412 20.7993H17.9237C17.484 20.7993 17.0958 21.0866 16.9673 21.5071L15.6367 25.8618ZM16.1557 20.376C16.2862 19.9586 16.6728 19.6743 17.1102 19.6743H26.8858C27.3251 19.6743 27.713 19.961 27.8418 20.381L29.5234 25.8618C29.6978 26.4198 29.2809 26.9868 28.6963 26.9868H28.6797H15.2852C14.7028 26.9868 14.2837 26.4225 14.4414 25.8618L16.1557 20.376Z"
@@ -50,7 +59,9 @@ const Navigation = () => {
                     </button>
                     <button
                         className="navigation__button navigation__button--cart"
-                        onClick={handleCartClick}
+                        onClick={()=> {
+                            setIsShowMenu(!isShowMenu);
+                            navigate("/cart")}}
                     >
                         <svg width="44" height="36" viewBox="0 0 44 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path

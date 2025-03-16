@@ -3,25 +3,17 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: white;
   padding: 15px;
-  border: 1px solid #ccc;
-  transition: box-shadow 0.3s ease;
-  margin-bottom: 20px;
-
-  &:hover {
-    box-shadow: 0 0 10px rgba(1, 1, 1, 0.5);
-  }
 }
 
 .product-item__text {
   font-weight: 400;
-  font-size: 36px;
-  line-height: 19.2px;
+  font-size: 24px;
   letter-spacing: 0;
   width: 100%;
   white-space: pre-line;
   text-align: center;
+  margin: 5px 0 5px 0;
 }
 
 .product-item__regular-price {

@@ -83,14 +83,24 @@ const CartItem = ({product, cartItems, setCartItems}: Props) => {
             <img className="cart-item__img" src={image}/>
             <div className="cart__info-without-img">
                     <div className="cart-item__info">
-                        <p>{categories}</p>
+                        <div className="cart-info__categories">
+                            <p className="cart-info__categories--title">Товар</p>
+                            <p>{categories}</p>
+                        </div>
+
                         <p>{newName}</p>
                         <p>Размер: {newSize}</p>
                     </div>
-                <p className="cart__price">
-                    {newPrice} ₽
-                </p>
+                <div className="cart__price">
+                    <p className="cart__price--title">Цена</p>
+                    <p>
+                        {newPrice} ₽
+                    </p>
+                </div>
                 <div className="cart__quantity-control">
+                    <p className="cart__current-number-of-item--text">
+                        Количество
+                    </p>
                     <div className="cart__quantity-control-wrapper">
                         <button
                             onClick={handleDecreaseCartItem}
@@ -102,7 +112,7 @@ const CartItem = ({product, cartItems, setCartItems}: Props) => {
                         </p>
                         <button
                             onClick={handleIncreaseCartItem}
-                                className="cart__button-increase">
+                            className="cart__button-increase">
                             +
                         </button>
                     </div>

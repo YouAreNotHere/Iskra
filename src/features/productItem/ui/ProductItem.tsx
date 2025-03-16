@@ -21,8 +21,8 @@ const ProductItem = ({product}: Props) => {
         >
             <img
                 src ={image}
-                width={535}
-                height={633}
+                width={252}
+                height={300}
             />
             <p className={newRegularPrice
                 ? "product-item__text product-item__sale-price"
