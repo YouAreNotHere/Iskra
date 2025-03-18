@@ -9,6 +9,7 @@ const ProductsList: React.FC = () => {
     const {data, makeRequest: getProducts, errorMessage: error, isLoading} = useRequest({method: "POST", body: {action: 'get_all_products'}});
 
 
+    console.log(products)
     useEffect(() => {
         getProducts()
     }, []);

@@ -1,3 +1,5 @@
+@import "../../shared/variable/variable";
+
 .about-container{
   width: 90%;
   margin: 0 auto;
@@ -9,6 +11,11 @@
     letter-spacing: 0;
     color: #1E1E1E;
     margin: 20px 0 30px 0;
+
+    @media (max-width: $mobile-width-only) {
+      align-self: center;
+      text-align: center;
+    }
   }
 }
 
@@ -17,6 +24,11 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 50px;
+
+  @media (max-width: $mobile-width-only) {
+    display: flex;
+    flex-direction: column;
+  }
 
   h2{
     text-align: center;

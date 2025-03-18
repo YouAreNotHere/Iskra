@@ -22,6 +22,7 @@ const CartItem = ({product, cartItems, setCartItems}: Props) => {
     const newName = name.replace(/\s*-\s*\d+(\.\d+)?$/, '');
     const newSize = size === "" ? "Универсальный" : size.replace(/-/g, ',');
     const newSubtotal: number|string = formatNumber(conversionHTMLToString(currentSubtotal));
+    // console.log(productState);
 
     const {makeRequest: deleteCartItem} = useRequest({
         method: "POST", body:{action: 'remove_from_cart', cart_item_key: cartItemKey}});
@@ -56,7 +57,9 @@ const CartItem = ({product, cartItems, setCartItems}: Props) => {
             })
             setCartItems(newCartItems);
 
-            setProductState({...product, quantity: product.quantity - 1})
+            setProductState({...product, quantity: product.quantity - 1,
+                subtotal: {regular: product.subtotal.regular - Number(product.price.regular),
+                    current: product.subtotal.current - Number(product.price.current)} })
             decreaseCartItem();
         }
     }
@@ -66,7 +69,7 @@ const CartItem = ({product, cartItems, setCartItems}: Props) => {
             if (item.cart_item_key === cartItemKey) {
                 return {
                     ...item, quantity: item.quantity + 1,
-                    subtotal: {regular: Number(item.subtotal.regular) + Number(item.price.regular),
+                    subtotal: {regular: item.subtotal.regular + Number(item.price.regular),
                         current: Number(item.subtotal.current) + Number(item.price.current)}
                 }
             }else{
@@ -74,7 +77,9 @@ const CartItem = ({product, cartItems, setCartItems}: Props) => {
             }
         })
         setCartItems(newCartItems);
-        setProductState({...product, quantity: product.quantity + 1})
+        setProductState({...product, quantity: product.quantity + 1,
+            subtotal: {regular: product.subtotal.regular + Number(product.price.regular),
+            current: product.subtotal.current + Number(product.price.current)} })
         increaseCartItem()
     }
 
@@ -84,10 +89,9 @@ const CartItem = ({product, cartItems, setCartItems}: Props) => {
             <div className="cart__info-without-img">
                     <div className="cart-item__info">
                         <div className="cart-info__categories">
-                            <p className="cart-info__categories--title">Товар</p>
-                            <p>{categories}</p>
+                            <p className="cart-info__categories--title">Товар: </p>
+                            <p className="cart-info__categories--text">{categories}</p>
                         </div>
-
                         <p>{newName}</p>
                         <p>Размер: {newSize}</p>
                     </div>

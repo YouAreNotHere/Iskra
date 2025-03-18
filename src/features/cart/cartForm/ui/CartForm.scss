@@ -29,12 +29,14 @@
   display: flex;
   flex-direction: column;
   background-color: $dark-background;
+  min-width: 750px;
 }
 
 .cart__products-info{
   display: flex;
   flex-direction: column;
-  width: 94%;
+  width: 100%;
+  padding: 0 15px 0 15px;
   margin: 0 auto;
   margin-top: 21px;
   box-sizing: border-box;
@@ -56,6 +58,7 @@
 
   @media (max-width: $mobile-width-only) {
     padding: 5px 5px 5px 5px;
+    display: none;
   }
 
   p{
@@ -142,6 +145,12 @@
   box-sizing: border-box;
 }
 
+.promocode__input{
+  @media (max-width: $mobile-width-only) {
+    width: 150px;
+  }
+}
+
 .promocode__button{
   background-color: #7E5A4D;
   color: #D9D9D9;
@@ -153,12 +162,20 @@
   flex-direction: column;
   justify-content: start;
 
+  @media (max-width: $mobile-width-only) {
+    margin-left: 0;
+  }
+
   h1{
     font-weight: 500;
     font-size: 24px;
     line-height: 34px;
     text-align: start;
     margin: 97px 0 10px 0;
+
+    @media (max-width: $mobile-width-only) {
+      margin-top: 50px;
+    }
   }
 
   p{
@@ -179,6 +196,10 @@
   box-sizing: border-box;
   background-color: #ECECEC;
   border-bottom: 1px solid #D9D9D9;
+
+  @media (max-width: $mobile-width-only) {
+    width: 100%;
+  }
 }
 
 .total-bill__finish-price{
@@ -191,4 +212,10 @@
   background-color: #7E5A4D;
   color: #D9D9D9;
   margin-top: 20px;
+
+  @media (max-width: $mobile-width-only) {
+    align-self: center;
+    border: 0;
+    margin-bottom: 20px;
+  }
 }

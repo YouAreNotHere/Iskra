@@ -1,3 +1,5 @@
+@import "../../shared/variable/variable";
+
 .page-container{
   width: 90%;
   margin: 0 auto;
@@ -9,6 +11,11 @@
     letter-spacing: 0;
     color: #1E1E1E;
     margin: 20px 0 30px 0;
+
+    @media (max-width: $mobile-width-only) {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
   }
 }
 
@@ -16,11 +23,23 @@
   text-align: justify;
   display: flex;
   gap: 15px;
+  font-size: 20px;
+
+  @media (max-width: $mobile-width-only) {
+    flex-direction: column;
+    font-size: 16px;
+  }
 
   h2{
     text-align: center;
     font-weight: 500;
     font-size: 28px;
     line-height: 34px;
+  }
+}
+
+.wp-block-list{
+  @media (max-width: $mobile-width-only) {
+    padding-left: 20px;
   }
 }
