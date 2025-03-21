@@ -8,8 +8,6 @@ const ProductsList: React.FC = () => {
     const [products, setProducts] = useState<IProductListItem[]>([]);
     const {data, makeRequest: getProducts, errorMessage: error, isLoading} = useRequest({method: "POST", body: {action: 'get_all_products'}});
 
-
-    console.log(products)
     useEffect(() => {
         getProducts()
     }, []);
@@ -26,8 +24,6 @@ const ProductsList: React.FC = () => {
     if (isLoading) {
         return <div>...Загрузка</div>;
     }
-
-    console.dir(products)
     
     return (
         <>

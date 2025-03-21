@@ -11,9 +11,14 @@ const Navigation = () => {
     return(
             <nav className="navigation">
                 <button
-                    onClick={()=> setIsShowMenu(!isShowMenu)}
-                    className="navigation__burger-menu"></button>
-                <div className = {isShowMenu ? "navigation__button-wrapper" : "navigation__button-wrapper--hidden"}>
+                    onClick={() => setIsShowMenu(!isShowMenu)}
+                    className={isShowMenu ? "navigation__burger-menu--opened" : "navigation__burger-menu--closed"}
+                >
+                    <span className="navigation__burger-line"></span>
+                    <span className="navigation__burger-line"></span>
+                    <span className="navigation__burger-line"></span>
+                </button>
+                <div className={isShowMenu ? "navigation__button-wrapper" : "navigation__button-wrapper--hidden"}>
                     <button
                         className = "navigation__button navigation__button--catalog"
                         onClick={()=> {

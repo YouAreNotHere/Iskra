@@ -7,7 +7,6 @@ const DeliveryAndPaymentPage = () => {
     const [content, setContent] = useState('');
     const {data, makeRequest, errorMessage} = useRequest({method:"POST",
         body: {action: 'get_page_by_slug', slug: "/доставка-и-оплата"}});
-    // const myMapKey = "294fc379-79be-474d-8180-35617fc680c9"
 
     useEffect(() => {
         makeRequest();

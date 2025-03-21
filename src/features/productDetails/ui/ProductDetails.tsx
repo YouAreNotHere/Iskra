@@ -1,17 +1,98 @@
 import ShowAdditionalButton from "../../../shared/buttons/ShowAdditionalButton.tsx";
 import "./ProductDetails.scss"
 import {useState, useEffect} from "react";
-import {useParams} from "react-router-dom";
+import {useParams, useNavigate} from "react-router-dom";
 import {ajaxUrl} from "../../../shared/url/url.tsx";
 import {useRequest} from "../../../shared/hooks/useRequest.ts";
 import IProductDetails from "../types/IProductDetails.tsx";
 
+interface ModalProps{
+    isOpen: boolean;
+    setIsOpen: (isOpen: boolean) => void;
+    selectedSize: string;
+    product: IProductDetails;
+}
+
+const ProductDetailsModal = ({isOpen, setIsOpen, selectedSize, product}: ModalProps) => {
+    const [productQuantity, setProductQuantity] = useState("0");
+    const [confirmButton, setConfirmButton] = useState("addToCart");
+    const navigate = useNavigate();
+
+    const onDecreaseClickHandler = () => {
+        if (Number(productQuantity) < 1)  return
+        setProductQuantity((Number(productQuantity) - 1).toString());
+    }
+
+    const onIncreaseClickHandler = () => {
+        setProductQuantity((Number(productQuantity) + 1).toString());
+    }
+
+    const {makeRequest: addItemToCart, data} = useRequest(
+        {method: "POST", body:
+                {action:  'add_to_cart', product_id: product?.id?.toString(), quantity: productQuantity, size: selectedSize}});
+
+    return (
+        <div className={isOpen ? "product-modal" : "product-modal--hidden"}>
+            <button
+                className="product-modal__button--close"
+                onClick={() => {
+                    setIsOpen(!isOpen)
+                    setConfirmButton("addToCart")
+                }
+            }>
+                Х
+            </button>
+            <h1 className="product-modal__title">Выберите количество товара</h1>
+            <div className="product-modal__buttons-wrapper">
+                <button onClick={onDecreaseClickHandler}>
+                    -
+                </button>
+                <input
+                    type="text"
+                    value={productQuantity}
+                    onChange={(e) => setProductQuantity(e.target.value)}
+                />
+                <button onClick={onIncreaseClickHandler}>
+                    +
+                </button>
+            </div>
+            <button
+                className={confirmButton === "addToCart"
+                    ? "product-modal__button--confirm"
+                    : "product-modal__button--hidden"}
+                onClick={() => {
+                    addItemToCart()
+                    setConfirmButton("navigateToCart")
+                }
+                }>
+                Добавить товар в корзину
+            </button>
+            <button
+                className={confirmButton === "addToCart"
+                    ? "product-modal__button--hidden"
+                    : !data ? "product-modal__button--disabled"
+                    : "product-modal__button--navigate"}
+                disabled={!data}
+                onClick={() => {
+                    console.log(data)
+                    setIsOpen(!isOpen)
+                    setConfirmButton("addToCart")
+                    navigate('/cart')
+                }
+                }>
+                Перейти в корзину
+            </button>
+        </div>
+    )
+}
+
 const ProductDetails = () => {
-    const { slug } = useParams();
+    const {slug} = useParams();
     const [product, setProduct] = useState<null | IProductDetails>(null);
     const [selectedSize, setSelectedSize] = useState<string>("");
     const [openedAdditionalInfo, setOpenedAdditionalInfo] = useState<number[]>([]);
     const [currentImg, setCurrentImg] = useState(0);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const {data, makeRequest: getProduct, isLoading, errorMessage} = useRequest(
         {method: "GET", url: `${ajaxUrl}?action=get_product_by_slug&slug=${slug}`});
 
@@ -27,16 +108,12 @@ const ProductDetails = () => {
         }
     }, [data]);
 
-    const {makeRequest: addItemToCart, isLoading: isAddToCartLoading, errorMessage: addItemError} = useRequest(
-        {method: "POST", body:
-                {action:  'add_to_cart', product_id: product?.id?.toString(), quantity: "1", size: selectedSize}});
-
-    const isButtonsDisabled: boolean = isLoading || isAddToCartLoading;
+    const isButtonsDisabled: boolean = isLoading;
 
 
     if (!product) return <div>Загрузка...</div>;
     if (errorMessage) return <div>Произошла ошибка при загрузке товара</div>;
-    if (addItemError) console.log(addItemError);
+    // if (addItemError) console.log(addItemError);
 
     const formatText = (text: string) => {
         const regex: RegExp = /(\*\*(.*?)\*\*|[^*]+)/g;
@@ -109,8 +186,8 @@ const ProductDetails = () => {
                     onClick={onDecreaseImgSlider}
                 >
                     <svg width="30" height="30" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M30 10L15 25L30 40" stroke="#000000" stroke-width="3" stroke-linecap="round"
-                              stroke-linejoin="round"/>
+                        <path d="M30 10L15 25L30 40" stroke="#000000" strokeWidth="3" strokeLinecap="round"
+                              strokeLinejoin="round"/>
                     </svg>
                 </button>
                 <button
@@ -118,8 +195,8 @@ const ProductDetails = () => {
                     onClick={onIncreaseImgSlider}
                 >
                     <svg width="30" height="30" viewBox="0 0 50 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M20 10L35 25L20 40" stroke="#000000" stroke-width="3" stroke-linecap="round"
-                              stroke-linejoin="round"/>
+                        <path d="M20 10L35 25L20 40" stroke="#000000" strokeWidth="3" strokeLinecap="round"
+                              strokeLinejoin="round"/>
                     </svg>
                 </button>
             </div>
@@ -169,7 +246,8 @@ const ProductDetails = () => {
                     <button
                         className="product-card__button--add-to-cart"
                         disabled={isButtonsDisabled}
-                        onClick={() => addItemToCart()}
+                        // onClick={() => addItemToCart()}
+                        onClick={()=> setIsModalOpen(!isModalOpen)}
                     >
                         Добавить в корзину
                     </button>
@@ -215,10 +293,15 @@ const ProductDetails = () => {
                 <ShowAdditionalButton
                     id={4}
                     value={"доставка"}
-                    // text={"Доставка осуществляется по всей России"}
                     text={<><span>Доставка осуществляется по всей России, </span><a href="/доставка-и-оплата">подробности здесь</a></>}
                     openedAdditionalInfo={openedAdditionalInfo}
                     setOpenedAdditionalInfo={setOpenedAdditionalInfo}
+                />
+                <ProductDetailsModal
+                    isOpen={isModalOpen}
+                    setIsOpen={setIsModalOpen}
+                    selectedSize={selectedSize}
+                    product={product}
                 />
             </div>
         </section>

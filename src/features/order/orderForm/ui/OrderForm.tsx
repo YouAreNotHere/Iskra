@@ -8,6 +8,7 @@ import {useRequest} from "../../../../shared/hooks/useRequest.ts";
 import IOrderProduct from "../../types/IOrderProduct.tsx";
 
 const  OrderForm = () => {
+    const [orderProducts, setOrderProducts] = useState<IOrderProduct[]>([])
     const [deliveryMethod, setDeliveryMethod] = useState("");
     const [paymentMethod, setPaymentMethod] = useState("");
     const [name, setName] = useState("");
@@ -30,19 +31,24 @@ const  OrderForm = () => {
         getOrderProducts()
     }, []);
 
-    if (!data) return <p> Загрузка...</p>
+    useEffect(() => {
+        if (data){
+            setOrderProducts(data.data.cart)
+        }
+    }, [data]);
 
-    const orderProducts: IOrderProduct[] = data.data.cart;
+    if (!orderProducts.length) return <p> Загрузка заказа...</p>
+
     const regularTotal = CalcTotal(orderProducts, "regular");
     const currentTotal = CalcTotal(orderProducts, "current");
     let deliveryCost = (data.data.totals.shipping_cost
+        .toString()
         .replace(/(\d[\d\s]*)\.\d+/, '$1')
         .replace(/\s+/g, ''))
     let finishTotal = deliveryMethod === "flat_rate"
         ? Number(currentTotal.replace(/ /g, "")) + Number(deliveryCost) : currentTotal;
     finishTotal = formatNumber(finishTotal);
     deliveryCost = formatNumber(deliveryCost);
-    console.dir(data)
 
     return(
         <section className="order-form">
