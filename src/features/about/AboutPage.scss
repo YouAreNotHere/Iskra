@@ -12,7 +12,7 @@
     color: #1E1E1E;
     margin: 20px 0 30px 0;
 
-    @media (max-width: $mobile-width-only) {
+    @media (max-width: $tablet-width) {
       align-self: center;
       text-align: center;
     }
@@ -25,7 +25,7 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 50px;
 
-  @media (max-width: $mobile-width-only) {
+  @media (max-width: $tablet-width) {
     display: flex;
     flex-direction: column;
   }

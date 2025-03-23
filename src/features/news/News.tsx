@@ -38,8 +38,6 @@ const News = () => {
 
     if (errorMessage) return <p>{errorMessage}</p>;
 
-    console.log(newsItems);
-
     return (
         <div className="news-container">
             <h1>Новости</h1>

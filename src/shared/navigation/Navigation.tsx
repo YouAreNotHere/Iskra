@@ -1,12 +1,34 @@
 import "./Navigation.scss";
 import {useNavigate} from "react-router-dom";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {useSelector, useDispatch} from "react-redux";
 import { useMediaQuery } from "react-responsive";
+import {useRequest} from "../hooks/useRequest.ts";
+import {IRootState} from "../types/RootState.ts";
+import {setCartQuantity} from "../actions";
 
 const Navigation = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const products = useSelector((state: IRootState) => state.cartProducts);
+    const quantity = useSelector((state: IRootState) => state.cartQuantity);
     const isWideScreen = useMediaQuery({ minWidth: 600 });
     const [isShowMenu, setIsShowMenu] = useState<boolean>(isWideScreen);
+    const {data, makeRequest} = useRequest({method: "POST", body: {action: 'get_product_quantity'}});
+
+    useEffect(() => {
+        if (products.length) {
+            console.log(products);
+            dispatch(setCartQuantity(products.length));
+            return
+        }
+        makeRequest()
+    }, []);
+
+    useEffect(() => {
+        if (!data) return
+        dispatch(setCartQuantity(data.data.cart.length))
+    }, [data]);
 
     return(
             <nav className="navigation">
@@ -95,6 +117,9 @@ const Navigation = () => {
                                 22.9834 28.8906 23.335C29.4883 23.6865 29.875 24.3193 29.875 25.0225Z"
                                 fill="#1E1E1E"/>
                         </svg>
+                        <p className={quantity ? "navigation__products-quantity" : "navigation__products-quantity--hidden"}>
+                            {quantity}
+                        </p>
                     </button>
                 </div>
             </nav>

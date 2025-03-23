@@ -1,27 +1,33 @@
 import "./CartForm.scss"
-import CartButton from "../../../../assets/CartButton.tsx";
-import {useNavigate} from "react-router-dom";
-import {useState, useEffect} from "react";
+
 import CartItem from "../../cartItem/CartItem.tsx";
 import calcTotal from "../../../../shared/functions/CalcTotal.tsx";
 import FormatNumber from "../../../../shared/functions/FormatNumber.tsx";
 import {useRequest} from "../../../../shared/hooks/useRequest.ts";
+import {loadProducts, setDeliveryCost} from "../../../../shared/actions";
+import {IRootState} from "../../../../shared/types/RootState.ts";
 import ICartItem from "../../types/ICartItem.tsx";
+import CartButton from "../../../../assets/CartButton.tsx";
+
+import {useNavigate} from "react-router-dom";
+import {useEffect} from "react";
+import {useSelector, useDispatch} from "react-redux";
 
 const CartForm = () => {
-    const [cartItems, setCartItems] = useState<ICartItem[] | []>([]);
+    const cartItems: ICartItem[] = useSelector((state: IRootState)=> state.cartProducts)
     const {data, makeRequest: getCartItems, isLoading: loading, errorMessage:error} = useRequest(
         {method: "POST", body: {action: 'get_cart_contents'}});
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         getCartItems();
     }, []);
 
     useEffect(() => {
-        if (data) {
-            setCartItems(data.data.cart);
-        }
+        if (!data) return
+        dispatch(loadProducts(data.data.cart))
+        dispatch(setDeliveryCost(data.data.totals.shipping_cost))
     }, [data]);
 
     if (loading) return <p>Загрузка корзины...</p>;
@@ -51,8 +57,6 @@ const CartForm = () => {
                             <CartItem
                                 key={item.id}
                                 product={item}
-                                cartItems={cartItems}
-                                setCartItems={setCartItems}
                             />
                         ))}
                     </div>

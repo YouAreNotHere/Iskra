@@ -4,7 +4,7 @@
   display: flex;
   color: #1E1E1E;
 
-  @media (max-width: $mobile-width-only) {
+  @media (max-width: $tablet-width) {
     flex-direction: column;
     width: 90%;
     margin: 0 auto;
@@ -21,7 +21,7 @@
    justify-content: start;
    grid-auto-rows: max-content;
 
-   @media (max-width: $mobile-width-only) {
+   @media (max-width: $tablet-width) {
      width: 100%;
      display: flex;
      flex-direction: column;
@@ -38,7 +38,7 @@
 }
 
 .product-card__image{
-  @media (max-width: $mobile-width-only) {
+  @media (max-width: $tablet-width) {
     display: none;
   }
 }
@@ -50,7 +50,7 @@
   align-self: center;
   margin-top: 25px;
 
-  @media (min-width: $mobile-width-only) {
+  @media (min-width: $tablet-width) {
     display: none;
   }
 }
@@ -95,7 +95,7 @@
   flex-direction: column;
   margin: 40px 137px 0 0;
 
-  @media (max-width: $mobile-width-only) {
+  @media (max-width: $tablet-width) {
     width: 100%;
     margin: 25px 0 0 0;
   }
@@ -203,11 +203,13 @@
   gap: 8px;
   width: 389px;
   list-style-type: none;
-  margin: 0;
+  margin: 0 0 50px 0;
   padding: 0;
   grid-auto-flow: column;
 
-  margin-bottom: 50px;
+  @media (max-width: $tablet-width) {
+    width: auto;
+  }
 }
 
  .product-card__possible-sizes-item{
@@ -273,83 +275,4 @@
    width: 100%;
    white-space: pre-line;
    margin: 0 0 50px 0;
- }
-
- .product-modal{
-   width: 400px;
-   height: 300px;
-   background-color: $background-color;
-   display: flex;
-   flex-direction: column;
-   justify-content: space-between;
-   position: fixed;
-   z-index: 1;
-   top: 400px;
-   left: 50%;
-   right: 50%;
-   transform: translate(-50%, -50%);
-   border: 1px solid;
-
-   button{
-     border: 0;
-   }
- }
-
- .product-modal--hidden{
-   display: none;
- }
-
- .product-modal__button--close{
-   width: 30px;
-   height: 30px;
-   align-self: end;
-   font-size: 30px;
-   background-color: transparent;
- }
-
- .product-modal__title{
-   font-size: 30px;
-   margin: 0;
- }
-
- .product-modal__buttons-wrapper{
-   display: flex;
-   width: 200px;
-   align-items: center;
-   align-self: center;
-   justify-content: center;
-   margin-top: 30px;
-
-   button{
-     background-color: transparent;
-   }
-
-   input{
-     width: 40px;
-     text-align: center;
-   }
- }
-
- .product-modal__button--confirm,
- .product-modal__button--navigate,
- .product-modal__button--disabled{
-   width: 200px;
-   background-color: $brown-button;
-   height: 50px;
-   margin-bottom: 30px;
-   color: $grey-text;
-   align-self: center;
- }
-
- .product-modal__button--navigate{
-   background-color: sandybrown;
-   color: white;
- }
-
- .product-modal__button--hidden{
-   display: none;
- }
-
- .product-modal__button--disabled{
-   opacity: 0.5;
  }

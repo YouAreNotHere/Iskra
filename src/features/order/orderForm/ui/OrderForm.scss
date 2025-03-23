@@ -7,7 +7,7 @@
   text-transform: lowercase;
   margin: 30px 0 79px 0;
 
-  @media (max-width: $mobile-width-only) {
+  @media (max-width: $tablet-width) {
     margin: 0;
     font-size: 34px;
   }
@@ -23,7 +23,7 @@
   position: relative;
   width: 600px;
 
-  @media (max-width: $mobile-width-only) {
+  @media (max-width: $tablet-width) {
     width: 100%;
   }
 
@@ -63,7 +63,7 @@
   justify-content: space-between;
   margin-bottom: 20px;
 
-  @media (max-width: $mobile-width-only) {
+  @media (max-width: $tablet-width) {
     width: 100%;
     gap: 5px;
   }
@@ -76,7 +76,7 @@
   margin: 0 0 20px 0;
   text-align: start;
 
-  @media (max-width: $mobile-width-only) {
+  @media (max-width: $tablet-width) {
     text-align: center;
     margin-top: 20px;
   }
@@ -89,7 +89,7 @@
   width: 298px;
   height: 49px;
 
-  @media (max-width: $mobile-width-only) {
+  @media (max-width: $tablet-width) {
     width: 50%;
   }
 }
@@ -136,7 +136,7 @@
   margin: 0 auto;
   justify-content: center;
 
-  @media (max-width: $mobile-width-only) {
+  @media (max-width: $tablet-width) {
     flex-direction: column;
     width: 90%;
   }
@@ -149,7 +149,7 @@
   flex-direction: column;
   justify-content: start;
 
-  @media (max-width: $mobile-width-only) {
+  @media (max-width: $tablet-width) {
     margin: 0;
     width: 100%;
   }
@@ -162,7 +162,7 @@
   margin: 0 0 20px 0;
   text-align: start;
 
-  @media (max-width: $mobile-width-only) {
+  @media (max-width: $tablet-width) {
     text-align: center;
     margin-top: 20px;
   }
@@ -257,7 +257,7 @@
   border: 0;
   margin-top: 30px;
 
-  @media (max-width: $mobile-width-only) {
+  @media (max-width: $tablet-width) {
     align-self: center;
     margin-bottom: 20px;
   }

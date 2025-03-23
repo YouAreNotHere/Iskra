@@ -1,86 +1,57 @@
-import CartButton from "../../../assets/CartButton.tsx";
 import "./CartItem.scss"
-import {useState} from "react";
+
+import {useDispatch} from "react-redux"
+
+import CartButton from "../../../assets/CartButton.tsx";
 import conversionHTMLToString from "../../../shared/functions/ConversionHTMLToString.tsx"
 import formatNumber from "../../../shared/functions/FormatNumber.tsx";
 import {useRequest} from "../../../shared/hooks/useRequest.ts";
+import Spinner from "../../../shared/effects/Spinner.tsx";
+import {increaseProduct, decreaseProduct, deleteProduct, decreaseCartQuantity} from "../../../shared/actions";
 import ICartItem from "../../cart/types/ICartItem.tsx";
 
 interface Props{
     product: ICartItem;
-    cartItems: ICartItem[];
-    setCartItems:  React.Dispatch<React.SetStateAction<[] | ICartItem[]>>;
 }
 
-const CartItem = ({product, cartItems, setCartItems}: Props) => {
-    const [productState, setProductState] = useState(product);
+const CartItem = ({product}: Props) => {
+    const dispatch = useDispatch();
     const {categories, name, size, price, cart_item_key: cartItemKey,
-        quantity,subtotal, image, id} = productState;
+        quantity,subtotal, image, id} = product;
     const {current: currentPrice} = price;
     const {current: currentSubtotal} = subtotal;
     const newPrice = formatNumber(currentPrice);
     const newName = name.replace(/\s*-\s*\d+(\.\d+)?$/, '');
     const newSize = size === "" ? "Универсальный" : size.replace(/-/g, ',');
     const newSubtotal: number|string = formatNumber(conversionHTMLToString(currentSubtotal));
-    // console.log(productState);
 
-    const {makeRequest: deleteCartItem} = useRequest({
+    const {makeRequest: deleteCartItem, isLoading: isRemoveLoading} = useRequest({
         method: "POST", body:{action: 'remove_from_cart', cart_item_key: cartItemKey}});
-    const {makeRequest: decreaseCartItem} = useRequest({
+    const {makeRequest: decreaseCartItem, isLoading: isDecreaseLoading} = useRequest({
         method: "POST", body:{action: 'decrease_cart_item_quantity', cart_item_key: cartItemKey}});
-    const {makeRequest: increaseCartItem} = useRequest({
+    const {makeRequest: increaseCartItem, isLoading: isIncreaseLoading} = useRequest({
         method: "POST", body:{action: 'increase_cart_item_quantity', cart_item_key: cartItemKey}});
 
 
     const handleRemoveFromCart = async () => {
-        deleteCartItem();
-        const newCartItems = cartItems.filter(item => item?.id !== id);
-        setCartItems(newCartItems);
+        await deleteCartItem();
+        dispatch(deleteProduct(id))
+        dispatch(decreaseCartQuantity())
     };
 
     const handleDecreaseCartItem = async () => {
-        if (productState.quantity < 2) {
+        if (quantity < 2) {
             handleRemoveFromCart()
+            return
         }
 
-        if (productState.quantity > 1) {
-            const newCartItems = cartItems.map((item) => {
-                if (item.cart_item_key === cartItemKey) {
-                    return {
-                        ...item, quantity: item.quantity - 1,
-                        subtotal: {regular: Number(item.subtotal.regular) - Number(item.price.regular),
-                            current: Number(item.subtotal.current) - Number(item.price.current)}
-                    }
-                }else{
-                    return item
-                }
-            })
-            setCartItems(newCartItems);
-
-            setProductState({...product, quantity: product.quantity - 1,
-                subtotal: {regular: product.subtotal.regular - Number(product.price.regular),
-                    current: product.subtotal.current - Number(product.price.current)} })
-            decreaseCartItem();
-        }
+        dispatch(decreaseProduct(cartItemKey))
+        await decreaseCartItem();
     }
 
     const handleIncreaseCartItem = async () => {
-        const newCartItems = cartItems.map((item) => {
-            if (item.cart_item_key === cartItemKey) {
-                return {
-                    ...item, quantity: item.quantity + 1,
-                    subtotal: {regular: item.subtotal.regular + Number(item.price.regular),
-                        current: Number(item.subtotal.current) + Number(item.price.current)}
-                }
-            }else{
-                return item
-            }
-        })
-        setCartItems(newCartItems);
-        setProductState({...product, quantity: product.quantity + 1,
-            subtotal: {regular: product.subtotal.regular + Number(product.price.regular),
-            current: product.subtotal.current + Number(product.price.current)} })
-        increaseCartItem()
+        dispatch(increaseProduct(cartItemKey))
+        await increaseCartItem()
     }
 
     return (
@@ -128,6 +99,7 @@ const CartItem = ({product, cartItems, setCartItems}: Props) => {
                     <CartButton/>
                 </button>
             </div>
+            <Spinner isLoading={isIncreaseLoading || isDecreaseLoading || isRemoveLoading}/>
         </div>
     )
 }

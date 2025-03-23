@@ -22,7 +22,7 @@ const ProductsList: React.FC = () => {
         return <div>Ошибка: {error}</div>;
     }
     if (isLoading) {
-        return <div>...Загрузка</div>;
+        return <div>Загрузка...</div>;
     }
     
     return (

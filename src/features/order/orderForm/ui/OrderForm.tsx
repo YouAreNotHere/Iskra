@@ -1,14 +1,19 @@
-import './OrderForm.scss';
-import {useEffect, useState} from "react";
+import {useState, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
+import {useSelector, useDispatch} from "react-redux";
+
+import './OrderForm.scss';
 import OrderProduct from "../../orderProduct/OrderProduct.tsx";
 import CalcTotal from "../../../../shared/functions/CalcTotal.tsx";
 import formatNumber from "../../../../shared/functions/FormatNumber.tsx";
 import {useRequest} from "../../../../shared/hooks/useRequest.ts";
-import IOrderProduct from "../../types/IOrderProduct.tsx";
+import {IRootState} from "../../../../shared/types/RootState.ts";
+import {loadProducts} from "../../../../shared/actions";
 
 const  OrderForm = () => {
-    const [orderProducts, setOrderProducts] = useState<IOrderProduct[]>([])
+    const orderProducts = useSelector((state: IRootState) => state.cartProducts);
+    let deliveryCost = useSelector((state: IRootState) => state.deliveryCost);
+
     const [deliveryMethod, setDeliveryMethod] = useState("");
     const [paymentMethod, setPaymentMethod] = useState("");
     const [name, setName] = useState("");
@@ -17,34 +22,39 @@ const  OrderForm = () => {
     const [email, setEmail] = useState("");
     const [address, setAddress] = useState("");
     const [comment, setComment] = useState("");
+
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
     const isButtonDisabled = deliveryMethod === "local_pickup"
         ? !name || !surname || !phone || !email
         : !name || !surname || !phone || !email || !address;
+
     const body = {action: 'post_order', first_name: name, last_name: surname,
         phone, email, address, comments: comment, payment_method: paymentMethod, shipping_method: deliveryMethod};
     const {makeRequest: postOrder} = useRequest({method: "POST", body});
+
     const {data, makeRequest: getOrderProducts} = useRequest({method: "POST", body : {action: 'get_order_products'}});
 
 
     useEffect(() => {
+        if (!!orderProducts.length) return
         getOrderProducts()
     }, []);
 
     useEffect(() => {
-        if (data){
-            setOrderProducts(data.data.cart)
-        }
+        if (!data) return
+        dispatch(loadProducts(data.data.cart))
     }, [data]);
 
     if (!orderProducts.length) return <p> Загрузка заказа...</p>
 
     const regularTotal = CalcTotal(orderProducts, "regular");
     const currentTotal = CalcTotal(orderProducts, "current");
-    let deliveryCost = (data.data.totals.shipping_cost
+    deliveryCost = deliveryCost
         .toString()
         .replace(/(\d[\d\s]*)\.\d+/, '$1')
-        .replace(/\s+/g, ''))
+        .replace(/\s+/g, '')
     let finishTotal = deliveryMethod === "flat_rate"
         ? Number(currentTotal.replace(/ /g, "")) + Number(deliveryCost) : currentTotal;
     finishTotal = formatNumber(finishTotal);
