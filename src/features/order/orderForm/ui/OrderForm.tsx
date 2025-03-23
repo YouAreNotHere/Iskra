@@ -8,7 +8,7 @@ import CalcTotal from "../../../../shared/functions/CalcTotal.tsx";
 import formatNumber from "../../../../shared/functions/FormatNumber.tsx";
 import {useRequest} from "../../../../shared/hooks/useRequest.ts";
 import {IRootState} from "../../../../shared/types/RootState.ts";
-import {loadProducts} from "../../../../shared/actions";
+import {loadProducts, setCartQuantity} from "../../../../shared/actions";
 
 const  OrderForm = () => {
     const orderProducts = useSelector((state: IRootState) => state.cartProducts);
@@ -269,6 +269,7 @@ const  OrderForm = () => {
                         disabled={isButtonDisabled}
                         onClick={() => {
                             postOrder()
+                            dispatch(setCartQuantity(0))
                             navigate('/')
                         }
                     }

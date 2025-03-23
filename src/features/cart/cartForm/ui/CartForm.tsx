@@ -27,6 +27,7 @@ const CartForm = () => {
     useEffect(() => {
         if (!data) return
         dispatch(loadProducts(data.data.cart))
+        if (!data.data.totals) return;
         dispatch(setDeliveryCost(data.data.totals.shipping_cost))
     }, [data]);
 

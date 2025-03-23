@@ -15,7 +15,7 @@ interface ModalProps{
 }
 
 const ProductDetailsModal = ({isOpen, setIsOpen, selectedSize, product}: ModalProps) => {
-    const [productQuantity, setProductQuantity] = useState("0");
+    const [productQuantity, setProductQuantity] = useState("1");
     const [confirmButton, setConfirmButton] = useState("addToCart");
     const dispatch = useDispatch();
     const navigate = useNavigate();
