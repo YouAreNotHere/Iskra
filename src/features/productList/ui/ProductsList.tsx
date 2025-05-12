@@ -5,38 +5,35 @@ import IProductListItem from "../type/IProductListItem.tsx";
 import "./ProductsList.scss"
 
 const ProductsList: React.FC = () => {
-    const [products, setProducts] = useState<IProductListItem[]>([]);
-    const {data, makeRequest: getProducts, errorMessage: error, isLoading} = useRequest({method: "POST", body: {action: 'get_all_products'}});
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(3);
+    const [products, setProducts]
+        = useState<IProductListItem[]>([]);
+
+    const {makeRequest: getProducts, errorMessage: error, isLoading}
+        = useRequest({
+        url:`http://localhost/my-wordpress-site/wp-json/iskra/v1/products?page=${page}&limit=${limit}`,
+        method: "GET",
+        onSuccess:(data)=> setProducts(data)});
 
     useEffect(() => {
         getProducts()
-    }, []);
+    }, [page, limit]);
 
-    useEffect(() => {
-        if (data) {
-            setProducts(data.data);
-        }
-    }, [data]);
-
-    if (error) {
-        return <div>Ошибка: {error}</div>;
-    }
-    if (isLoading) {
-        return <div>Загрузка...</div>;
-    }
-    
     return (
         <>
-            {products.length > 0 ? (
+            {error && <p>Ошибка: {error}</p>}
+            {isLoading && <p>Загрузка...</p>}
+            {products.length > 0 && (
                 <ul className="products-list">
                     {products.map((product: IProductListItem) => (
                       <li key={product.id}>
                           <ProductItem product = {product}/>
                       </li>))}
                 </ul>
-            ) : (
-                <div>Загрузка...</div>
             )}
+            <button onClick={()=>setPage(page+1)}>Страница: {page}</button>
+            <button onClick={()=>setLimit(limit+1)}>Товаров на странице: {limit}</button>
         </>
     );
 };

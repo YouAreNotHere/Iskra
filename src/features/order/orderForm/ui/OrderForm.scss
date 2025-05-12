@@ -35,6 +35,8 @@
     line-height: 120%;
     box-sizing: border-box;
     width: 100%;
+    background-color: white;
+    color: black;
   }
 
   label {
@@ -239,6 +241,17 @@
 .payment-method__radio,
 .delivery-method__radio{
   margin: 0 10px 0 0;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid black;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+
+  &:checked{
+    background: black;
+  }
 }
 
 .payment-method__text,
