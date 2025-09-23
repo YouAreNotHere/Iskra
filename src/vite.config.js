@@ -2,7 +2,7 @@ export default {
     server: {
         proxy: {
             '/api': {
-                target: 'http://iskra.infinityfreeapp.com',
+                target: 'https://anton.great-site.net',
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/api/, ''),
             },

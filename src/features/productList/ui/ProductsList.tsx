@@ -12,7 +12,7 @@ const ProductsList: React.FC = () => {
 
     const {makeRequest: getProducts, errorMessage: error, isLoading}
         = useRequest({
-        url:`http://localhost/my-wordpress-site/wp-json/iskra/v1/products?page=${page}&limit=${limit}`,
+        url:`http://localhost/my-wordpress-site/wp-json/anton/v1/products?page=${page}&limit=${limit}`,
         method: "GET",
         onSuccess:(data)=> setProducts(data)});
 
