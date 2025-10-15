@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import ProductItem from "../../productItem/ui/ProductItem.tsx";
 import {useRequest} from "../../../shared/hooks/useRequest.ts";
@@ -5,35 +6,39 @@ import IProductListItem from "../type/IProductListItem.tsx";
 import "./ProductsList.scss"
 
 const ProductsList: React.FC = () => {
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(3);
-    const [products, setProducts]
-        = useState<IProductListItem[]>([]);
-
-    const {makeRequest: getProducts, errorMessage: error, isLoading}
-        = useRequest({
-        url:`http://localhost/my-wordpress-site/wp-json/anton/v1/products?page=${page}&limit=${limit}`,
-        method: "GET",
-        onSuccess:(data)=> setProducts(data)});
+    const [products, setProducts] = useState<IProductListItem[]>([]);
+    const {data, makeRequest: getProducts, errorMessage: error, isLoading} = useRequest({method: "POST", body: {action: 'get_all_products'}});
 
     useEffect(() => {
         getProducts()
-    }, [page, limit]);
+    }, []);
+
+    useEffect(() => {
+        if (data) {
+            setProducts(data.data);
+        }
+    }, [data]);
+
+
+    if (error) {
+        return <div>Ошибка: {error}</div>;
+    }
+    if (isLoading) {
+        return <div>Загрузка...</div>;
+    }
 
     return (
         <>
-            {error && <p>Ошибка: {error}</p>}
-            {isLoading && <p>Загрузка...</p>}
-            {products.length > 0 && (
+            {products.length > 0 ? (
                 <ul className="products-list">
                     {products.map((product: IProductListItem) => (
-                      <li key={product.id}>
-                          <ProductItem product = {product}/>
-                      </li>))}
+                        <li key={product.id}>
+                            <ProductItem product = {product}/>
+                        </li>))}
                 </ul>
+            ) : (
+                <div>Загрузка...</div>
             )}
-            <button onClick={()=>setPage(page+1)}>Страница: {page}</button>
-            <button onClick={()=>setLimit(limit+1)}>Товаров на странице: {limit}</button>
         </>
     );
 };

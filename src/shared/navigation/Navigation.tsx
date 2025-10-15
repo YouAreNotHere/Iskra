@@ -18,7 +18,6 @@ const Navigation = () => {
 
     useEffect(() => {
         if (products.length) {
-            console.log(products);
             dispatch(setCartQuantity(products.length));
             return
         }

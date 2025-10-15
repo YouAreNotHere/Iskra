@@ -189,7 +189,6 @@ const ProductDetails = () => {
                     <p
                         className="product-card__text-description"
                         dangerouslySetInnerHTML={{__html: formatText(description)}}/>
-                {/*<div className={}*/}
                 <ShowAdditionalButton
                     id = {1}
                     value={"в комплекте"}

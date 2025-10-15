@@ -79,7 +79,6 @@ const ProductDetailsModal = ({isOpen, setIsOpen, selectedSize, product}: ModalPr
                         : "product-modal__button--navigate"}
                 disabled={!data}
                 onClick={() => {
-                    console.log(data)
                     setIsOpen(!isOpen)
                     setConfirmButton("addToCart")
                     navigate('/cart')
